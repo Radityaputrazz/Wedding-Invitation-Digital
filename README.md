@@ -32,9 +32,8 @@ Jika Anda ingin menjalankan proyek ini secara lokal:
 
 1. **Clone repositori ini:**
    ```bash
-   git clone [https://github.com/username/nama-repo.git](https://github.com/username/nama-repo.git)
+   git clone https://github.com/Radityaputrazz/Wedding-Invitation-Digital.git
    cd nama-repo
-   nstal dependensi:
 
 2. **Instal Dependensi:**
     ```bash
