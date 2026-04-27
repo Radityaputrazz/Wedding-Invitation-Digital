@@ -59,9 +59,9 @@ Jika Anda ingin menjalankan proyek ini secara lokal:
     public/images/ - Folder untuk aset gambar (Foto mempelai, galeri, dll).
 
 ## 📝 Catatan Penting
-    Pastikan Anda telah membuat spreadsheet di Google Sheets dan menghubungkannya ke SheetDB untuk mengaktifkan fitur Buku       Tamu dan RSVP.
+    Pastikan Anda telah membuat spreadsheet di Google Sheets dan menghubungkannya ke SheetDB untuk mengaktifkan fitur Buku Tamu dan RSVP.
 
 ## 🤝 Kontribusi
-    Proyek ini dibuat untuk keperluan pribadi, namun jika Anda ingin memberikan saran atau perbaikan, silakan buka Issue         atau ajukan Pull Request.
+    Proyek ini dibuat untuk keperluan pribadi, namun jika Anda ingin memberikan saran atau perbaikan, silakan buka Issue atau ajukan Pull Request.
 
 ## Dibuat oleh [Raditya Ananda Putra]
