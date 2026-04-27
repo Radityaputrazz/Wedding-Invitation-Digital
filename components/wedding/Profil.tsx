@@ -3,7 +3,6 @@
 
 import { useEffect, useRef } from "react";
 import { weddingConfig } from "@/lib/weddingData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function Profil() {
   const sectionRef = useRef<HTMLElement>(null);

@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { weddingConfig } from "@/lib/weddingData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

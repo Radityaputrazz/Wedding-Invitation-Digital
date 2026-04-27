@@ -3,7 +3,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { weddingConfig } from "@/lib/weddingData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 interface CoverProps {
   onOpen: () => void;

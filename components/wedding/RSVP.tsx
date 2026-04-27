@@ -3,7 +3,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { weddingConfig } from "@/lib/weddingData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 type StatusKehadiran = "hadir" | "tidak" | "mungkin";
 

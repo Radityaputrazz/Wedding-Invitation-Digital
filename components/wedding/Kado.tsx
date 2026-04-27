@@ -4,7 +4,6 @@
 import { useEffect, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { weddingConfig } from "@/lib/weddingData";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function Kado() {
   const sectionRef = useRef<HTMLElement>(null);
