@@ -21,12 +21,38 @@ export default function Ucapan() {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  // --- KUNCI: FUNGSI KONVERSI TANGGAL ---
+  const formatTanggal = (val: any) => {
+    if (!val) return "";
+    
+    // Jika formatnya angka serial Google Sheets (misal: 46139)
+    if (!isNaN(val) && typeof val !== "string") {
+      const date = new Date((val - 25569) * 86400 * 1000);
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+    
+    // Jika sudah string atau format lain, return apa adanya
+    return val;
+  };
+
   useEffect(() => {
     async function fetchUcapan() {
       try {
         const res = await fetch(`${weddingConfig.sheetdbUrl}?sheet=ucapan`);
         const data = await res.json();
-        if (Array.isArray(data)) setUcapanList(data.reverse());
+        
+        if (Array.isArray(data)) {
+          // Kita bersihkan data di sini sebelum masuk ke State
+          const cleanedData = data.map((item: any) => ({
+            ...item,
+            waktu: formatTanggal(item.waktu) // Konversi angka serial ke tanggal
+          }));
+          setUcapanList(cleanedData.reverse());
+        }
       } catch {
         console.error("Gagal mengambil ucapan");
       } finally {
@@ -147,6 +173,7 @@ export default function Ucapan() {
                   <div key={i} style={styles.ucapanCard}>
                     <p style={styles.cardName}>{item.nama}</p>
                     <p style={styles.cardPesan}>"{item.pesan}"</p>
+                    {/* Waktu di sini sudah dalam format cantik */}
                     <p style={styles.cardWaktu}>{item.waktu}</p>
                   </div>
                 ))
@@ -157,6 +184,8 @@ export default function Ucapan() {
       </div>
 
       <style jsx>{`
+        .animate { opacity: 0; transform: translateY(30px); transition: 1s ease; }
+        .animate.visible { opacity: 1; transform: translateY(0); }
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
       `}</style>
@@ -164,21 +193,21 @@ export default function Ucapan() {
   );
 }
 
-// ─── STYLES (Dark Premium) ──────────────────────────────────
+// ─── STYLES (Didefinisikan di luar agar tidak error scope) ──────────
 
 const styles = {
   section: {
-    background: "#1a1510", // Gelap sedikit hangat
+    background: "#1a1510", 
     padding: "8rem 1.5rem",
   } as React.CSSProperties,
 
   container: { maxWidth: "1100px", margin: "0 auto" } as React.CSSProperties,
 
   header: { textAlign: "center", marginBottom: "4rem" } as React.CSSProperties,
-  sectionLabel: { fontSize: "0.8rem", letterSpacing: "0.5em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.5rem" } as React.CSSProperties,
-  sectionTitle: { fontFamily: "var(--font-serif)", fontSize: "3rem", color: "#FAF0E0", fontWeight: 300 } as React.CSSProperties,
+  sectionLabel: { fontSize: "0.8rem", letterSpacing: "0.5em", textTransform: "uppercase", color: "#B8964A", marginBottom: "0.5rem" } as React.CSSProperties,
+  sectionTitle: { fontFamily: "serif", fontSize: "3rem", color: "#FAF0E0", fontWeight: 300 } as React.CSSProperties,
   ornamentWrapper: { display: "flex", alignItems: "center", justifyContent: "center", gap: "15px", margin: "1.5rem 0" } as React.CSSProperties,
-  ornamentLine: { width: "40px", height: "1px", background: "linear-gradient(90deg, transparent, var(--gold), transparent)" } as React.CSSProperties,
+  ornamentLine: { width: "40px", height: "1px", background: "linear-gradient(90deg, transparent, #B8964A, transparent)" } as React.CSSProperties,
 
   grid: {
     display: "grid",
@@ -195,11 +224,11 @@ const styles = {
     padding: "2.5rem",
   } as React.CSSProperties,
 
-  subTitle: { color: "#FAF0E0", fontSize: "1.5rem", fontFamily: "var(--font-serif)", marginBottom: "1.5rem" } as React.CSSProperties,
+  subTitle: { color: "#FAF0E0", fontSize: "1.5rem", fontFamily: "serif", marginBottom: "1.5rem" } as React.CSSProperties,
 
   form: { display: "flex", flexDirection: "column", gap: "1.5rem" } as React.CSSProperties,
   formGroup: { display: "flex", flexDirection: "column", gap: "0.5rem" } as React.CSSProperties,
-  label: { fontSize: "0.7rem", color: "var(--gold-light)", letterSpacing: "0.1em", textTransform: "uppercase" } as React.CSSProperties,
+  label: { fontSize: "0.7rem", color: "#B8964A", letterSpacing: "0.1em", textTransform: "uppercase" } as React.CSSProperties,
 
   input: {
     background: "rgba(255, 255, 255, 0.05)",
@@ -224,7 +253,7 @@ const styles = {
 
   submitBtn: {
     padding: "1.2rem",
-    background: "var(--gold)",
+    background: "#B8964A",
     color: "#000",
     border: "none",
     borderRadius: "12px",
@@ -237,7 +266,7 @@ const styles = {
   } as React.CSSProperties,
 
   listHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" } as React.CSSProperties,
-  countBadge: { background: "rgba(184, 150, 74, 0.1)", color: "var(--gold)", padding: "0.4rem 1rem", borderRadius: "30px", fontSize: "0.75rem" } as React.CSSProperties,
+  countBadge: { background: "rgba(184, 150, 74, 0.1)", color: "#B8964A", padding: "0.4rem 1rem", borderRadius: "30px", fontSize: "0.75rem" } as React.CSSProperties,
 
   listContainer: {
     maxHeight: "500px",
@@ -250,16 +279,16 @@ const styles = {
 
   ucapanCard: {
     background: "rgba(255, 255, 255, 0.02)",
-    borderLeft: "2px solid var(--gold)",
+    borderLeft: "2px solid #B8964A",
     padding: "1.5rem",
     borderRadius: "0 15px 15px 0",
   } as React.CSSProperties,
 
-  cardName: { color: "var(--gold)", fontWeight: "bold", fontSize: "0.9rem", marginBottom: "0.5rem" } as React.CSSProperties,
+  cardName: { color: "#B8964A", fontWeight: "bold", fontSize: "0.9rem", marginBottom: "0.5rem" } as React.CSSProperties,
   cardPesan: { color: "rgba(250, 240, 224, 0.8)", fontSize: "0.95rem", lineHeight: 1.6, fontStyle: "italic" } as React.CSSProperties,
   cardWaktu: { color: "rgba(250, 240, 224, 0.4)", fontSize: "0.75rem", marginTop: "1rem" } as React.CSSProperties,
 
   errorText: { color: "#ff6b6b", fontSize: "0.85rem" } as React.CSSProperties,
-  successText: { color: "var(--gold)", fontSize: "0.85rem" } as React.CSSProperties,
+  successText: { color: "#B8964A", fontSize: "0.85rem" } as React.CSSProperties,
   statusText: { textAlign: "center", color: "rgba(250, 240, 224, 0.4)", padding: "2rem" } as React.CSSProperties,
 };
