@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import WeddingPageContent from "@/components/wedding/WeddingPageContent";
+import WeddingContainer from "@/components/wedding/WeddingContainer";
 
 type Props = {
   searchParams: { to?: string };
@@ -28,5 +28,5 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 }
 
 export default function Page({ searchParams }: Props) {
-  return <WeddingPageContent guestName={searchParams.to || "Tamu Undangan"} />;
+  return <WeddingContainer guestName={searchParams.to || "Tamu Undangan"} />;
 }
