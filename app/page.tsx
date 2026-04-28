@@ -18,6 +18,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "Undangan Pernikahan Radit & Keiani",
+        type: "image/png",
       },
     ],
     locale: "id_ID",
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     title: "Undangan Pernikahan Radit & Keiani",
     description: "Kami menantikan kehadiran Anda di hari bahagia kami.",
     // Samakan juga untuk twitter card
-    images: ["https://wedding-invitation-radityaputra.vercel.app/images/cover.png"],
+    images: ["https://wedding-invitation-radityaputra.vercel.app/images/coverWa.png"],
   },
 };
 
