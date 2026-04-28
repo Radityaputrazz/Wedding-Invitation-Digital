@@ -59,7 +59,11 @@ export default function Acara() {
         <div className="animate" style={countdownSectionStyle}>
           <div style={countdownCardStyle}>
             <p style={countdownLabelStyle}>Menghitung Mundur Hari Bahagia</p>
-            <Countdown />
+            
+            {/* Wrapper khusus untuk responsif */}
+            <div className="countdown-container">
+               <Countdown />
+            </div>
             
             <div style={calBtnsStyle}>
               <CalendarButton 
@@ -80,10 +84,20 @@ export default function Acara() {
       </div>
 
       <style jsx>{`
+        .animate { opacity: 0; transform: translateY(20px); transition: 1s ease; }
+        .animate.visible { opacity: 1; transform: translateY(0); }
+        
         @media (max-width: 850px) {
           .event-grid {
             grid-template-columns: 1fr !important;
-            gap: 3rem !important;
+            gap: 2rem !important;
+          }
+        }
+
+        /* PERBAIKAN COUNTDOWN MOBILE */
+        @media (max-width: 480px) {
+          .countdown-container {
+            transform: scale(0.9); /* Sedikit mengecilkan seluruh area agar tidak mepet edge */
           }
         }
       `}</style>
@@ -128,7 +142,7 @@ function EventCard({ type, name, data, icon }: { type: string; name: string; dat
         }
         .btn-glow:hover { 
           background: var(--gold) !important; 
-          color: var(--brown-dark) !important;
+          color: #1a1510 !important;
           box-shadow: 0 0 20px rgba(184,150,74,0.5);
         }
       `}</style>
@@ -143,7 +157,7 @@ function CalendarButton({ href, label, icon, download }: any) {
       <style jsx>{`
         .cal-btn:hover { 
           background: var(--gold) !important; 
-          color: var(--brown-dark) !important; 
+          color: #1a1510 !important; 
           transform: scale(1.05);
         }
       `}</style>
@@ -166,21 +180,47 @@ function Countdown() {
   ];
 
   return (
-    <div style={countdownGridStyle}>
+    <div style={countdownGridStyle} className="countdown-flex">
       {items.map((item, i) => (
         <div key={item.l} style={{ display: "flex", alignItems: "center" }}>
-          <div style={countdownBox}>
-            <span style={countdownNumStyle}>{String(item.v).padStart(2, "0")}</span>
-            <span style={countdownUnitStyle}>{item.l}</span>
+          <div className="countdown-box" style={countdownBox}>
+            <span className="num" style={countdownNumStyle}>{String(item.v).padStart(2, "0")}</span>
+            <span className="label" style={countdownUnitStyle}>{item.l}</span>
           </div>
-          {i < items.length - 1 && <span style={colonStyle}>:</span>}
+          {i < items.length - 1 && <span className="colon" style={colonStyle}>:</span>}
         </div>
       ))}
+      <style jsx>{`
+        .countdown-flex {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem; /* Perkecil gap antar grup */
+        }
+        @media (max-width: 480px) {
+          .countdown-box {
+            min-width: 65px !important; /* Perkecil kotak di mobile */
+          }
+          .num {
+            font-size: 2.2rem !important; /* Perkecil ukuran angka */
+          }
+          .label {
+            font-size: 0.6rem !important;
+          }
+          .colon {
+            font-size: 1.5rem !important;
+            padding-bottom: 0.8rem !important;
+          }
+          .countdown-flex {
+            gap: 0.2rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
-// ─── Helpers ───────────────────────────────────────────────
+// ─── Helpers & Styles ──────────────────────────────────────
 
 function getTimeLeft() {
   const target = new Date(weddingConfig.weddingDate).getTime();
@@ -194,15 +234,13 @@ function getTimeLeft() {
 }
 
 function icalContent() {
-  const content = ["BEGIN:VCALENDAR", "VERSION:2.0", "BEGIN:VEVENT", "SUMMARY:Pernikahan", "LOCATION:Jakarta", "END:VEVENT", "END:VCALENDAR"].join("\n");
+  const content = ["BEGIN:VCALENDAR", "VERSION:2.0", "BEGIN:VEVENT", "SUMMARY:Pernikahan Radit & Keiani", "LOCATION:Jakarta", "DTSTART:20260628T090000Z", "END:VEVENT", "END:VCALENDAR"].join("\n");
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(content)}`;
 }
 
-// ─── Styles: Containers ───────────────────────────────────
-
 const sectionStyle: React.CSSProperties = {
-  background: "linear-gradient(to bottom, #1a1510, #2a2219)",
-  padding: "8rem 1.5rem",
+  background: "#1a1510",
+  padding: "6rem 1.2rem",
   position: "relative",
 };
 
@@ -218,20 +256,17 @@ const cardsGridStyle: React.CSSProperties = {
   marginTop: "4rem",
 };
 
-// ─── Styles: Typography & Ornament ────────────────────────
-
 const sectionLabelStyle: React.CSSProperties = {
-  fontSize: "0.8rem",
-  fontWeight: 500,
-  letterSpacing: "0.5em",
+  fontSize: "0.75rem",
+  letterSpacing: "0.4em",
   textTransform: "uppercase",
-  color: "var(--gold)",
+  color: "#B8964A",
   marginBottom: "0.5rem",
 };
 
 const sectionTitleStyle: React.CSSProperties = {
-  fontFamily: "var(--font-serif)",
-  fontSize: "clamp(2.5rem, 6vw, 3.5rem)",
+  fontFamily: "serif",
+  fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
   fontWeight: 300,
   color: "#FAF0E0",
 };
@@ -240,24 +275,21 @@ const ornamentWrapper: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: "20px",
+  gap: "15px",
   marginTop: "1rem",
 };
 
 const ornamentLine: React.CSSProperties = {
-  width: "60px",
+  width: "50px",
   height: "1px",
-  background: "linear-gradient(90deg, transparent, var(--gold), transparent)",
+  background: "linear-gradient(90deg, transparent, #B8964A, transparent)",
 };
-
-// ─── Styles: Event Cards ───────────────────────────────────
 
 const cardStyle: React.CSSProperties = {
   position: "relative",
   textAlign: "center",
-  padding: "3rem 2rem",
+  padding: "3rem 1.5rem",
   background: "rgba(255,255,255,0.03)",
-  backdropFilter: "blur(12px)",
   borderRadius: "24px",
   border: "1px solid rgba(184,150,74,0.15)",
 };
@@ -266,26 +298,26 @@ const iconCircleStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  width: "65px",
-  height: "65px",
+  width: "60px",
+  height: "60px",
   margin: "0 auto 1.5rem",
-  fontSize: "1.6rem",
+  fontSize: "1.4rem",
   background: "rgba(184,150,74,0.1)",
-  border: "1px solid var(--gold)",
+  border: "1px solid #B8964A",
   borderRadius: "50%",
 };
 
 const cardTypeStyle: React.CSSProperties = {
-  fontSize: "0.75rem",
-  letterSpacing: "0.2em",
+  fontSize: "0.7rem",
+  letterSpacing: "0.15em",
   textTransform: "uppercase",
-  color: "var(--gold-light)",
+  color: "#B8964A",
   marginBottom: "0.5rem",
 };
 
 const cardNameStyle: React.CSSProperties = {
-  fontFamily: "var(--font-serif)",
-  fontSize: "2.2rem",
+  fontFamily: "serif",
+  fontSize: "2rem",
   color: "#FAF0E0",
   marginBottom: "1.5rem",
 };
@@ -301,27 +333,25 @@ const infoRowStyle: React.CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
-  gap: "1.5rem",
-  marginBottom: "0.5rem",
+  gap: "1rem",
 };
 
 const infoItem: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: "8px",
-  fontSize: "0.95rem",
+  gap: "6px",
+  fontSize: "0.9rem",
   color: "#B8A898",
 };
 
 const infoIcon: React.CSSProperties = {
-  color: "var(--gold)",
+  color: "#B8964A",
 };
 
 const cardDividerStyle: React.CSSProperties = {
-  width: "40px",
+  width: "30px",
   height: "1px",
   background: "rgba(184,150,74,0.3)",
-  margin: "0.5rem 0",
 };
 
 const locationBoxStyle: React.CSSProperties = {
@@ -331,62 +361,54 @@ const locationBoxStyle: React.CSSProperties = {
 
 const namaGedungStyle: React.CSSProperties = {
   display: "block",
-  fontSize: "1.2rem",
+  fontSize: "1.1rem",
   fontWeight: 500,
-  letterSpacing: "0.5px",
   color: "#FAF0E0",
-  marginBottom: "8px",
+  marginBottom: "4px",
 };
 
 const alamatTextStyle: React.CSSProperties = {
-  fontSize: "0.9rem",
-  lineHeight: 1.6,
-  maxWidth: "280px",
-  margin: "0 auto",
+  fontSize: "0.85rem",
+  lineHeight: 1.5,
   color: "#B8A898",
 };
 
 const mapsBtnStyle: React.CSSProperties = {
   display: "inline-block",
-  marginTop: "2.5rem",
-  padding: "0.8rem 2.5rem",
-  fontSize: "0.85rem",
-  letterSpacing: "0.1em",
+  marginTop: "2rem",
+  padding: "0.7rem 2rem",
+  fontSize: "0.8rem",
   textDecoration: "none",
-  color: "var(--gold-light)",
-  background: "transparent",
-  border: "1px solid var(--gold)",
+  color: "#FAF0E0",
+  border: "1px solid #B8964A",
   borderRadius: "50px",
-  transition: "all 0.4s",
+  transition: "all 0.3s",
 };
 
-// ─── Styles: Countdown Section ─────────────────────────────
-
 const countdownSectionStyle: React.CSSProperties = {
-  marginTop: "6rem",
+  marginTop: "5rem",
   textAlign: "center",
 };
 
 const countdownCardStyle: React.CSSProperties = {
-  padding: "3.5rem 2rem",
+  padding: "3rem 1rem",
   background: "rgba(255,255,255,0.02)",
-  borderRadius: "32px",
+  borderRadius: "24px",
   border: "1px dashed rgba(184,150,74,0.2)",
 };
 
 const countdownLabelStyle: React.CSSProperties = {
-  fontSize: "0.85rem",
-  letterSpacing: "0.3em",
+  fontSize: "0.8rem",
+  letterSpacing: "0.2em",
   textTransform: "uppercase",
-  color: "var(--gold-light)",
+  color: "#B8964A",
+  marginBottom: "2rem",
 };
 
 const countdownGridStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  gap: "1rem",
-  marginTop: "2rem",
 };
 
 const countdownBox: React.CSSProperties = {
@@ -395,48 +417,45 @@ const countdownBox: React.CSSProperties = {
 
 const countdownNumStyle: React.CSSProperties = {
   display: "block",
-  fontFamily: "var(--font-serif)",
-  fontSize: "3.5rem",
+  fontFamily: "serif",
+  fontSize: "3.2rem",
   lineHeight: 1,
   color: "#FAF0E0",
+  fontVariantNumeric: "tabular-nums",
 };
 
 const countdownUnitStyle: React.CSSProperties = {
   display: "block",
-  fontSize: "0.75rem",
-  letterSpacing: "0.15em",
+  fontSize: "0.7rem",
   textTransform: "uppercase",
-  color: "var(--gold-light)",
-  marginTop: "5px",
+  color: "#B8964A",
+  marginTop: "8px",
 };
 
 const colonStyle: React.CSSProperties = {
-  fontSize: "2.5rem",
+  fontSize: "2.2rem",
   paddingBottom: "1.2rem",
-  color: "var(--gold)",
-  opacity: 0.4,
+  color: "#B8964A",
+  opacity: 0.3,
 };
-
-// ─── Styles: Buttons ──────────────────────────────────────
 
 const calBtnsStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   flexWrap: "wrap",
-  gap: "1.5rem",
-  marginTop: "3rem",
+  gap: "1rem",
+  marginTop: "2.5rem",
 };
 
 const calBtnStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: "10px",
-  padding: "0.8rem 1.8rem",
-  fontSize: "0.85rem",
+  gap: "8px",
+  padding: "0.7rem 1.5rem",
+  fontSize: "0.8rem",
   textDecoration: "none",
-  color: "var(--gold-light)",
-  background: "rgba(184,150,74,0.05)",
-  border: "1px solid var(--gold)",
-  borderRadius: "12px",
+  color: "#FAF0E0",
+  border: "1px solid #B8964A",
+  borderRadius: "10px",
   transition: "all 0.3s",
 };

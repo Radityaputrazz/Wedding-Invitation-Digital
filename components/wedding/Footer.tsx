@@ -26,15 +26,16 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} style={footerStyle}>
-
       {/* Garis ornamen atas */}
       <GoldLine />
 
-      {/* Protokol */}
-      <div className="animate" style={protokolGridStyle}>
+      {/* Protokol - Mobile Friendly Grid */}
+      <div className="animate protokol-container">
         <ProtokolItem icon="👔" title="Dress Code" desc={weddingConfig.dressCode} />
-        <ProtokolItem icon="📸" title="Tagar Foto"
-          desc={<>Bagikan momen Anda dengan <strong style={{ color: "var(--sage-light)" }}>{weddingConfig.hashtag}</strong></>}
+        <ProtokolItem 
+          icon="📸" 
+          title="Tagar Foto"
+          desc={<>Bagikan momen Anda dengan <br/><strong style={{ color: "#B8964A" }}>{weddingConfig.hashtag}</strong></>}
         />
         <ProtokolItem icon="🅿️" title="Parkir" desc="Tersedia di Basement B1 & B2. Kapasitas terbatas." />
       </div>
@@ -62,19 +63,19 @@ export default function Footer() {
       </p>
 
       {/* Keluarga pengundang */}
-      <div className="animate" style={{ textAlign: "center", marginTop: "2.5rem" }}>
+      <div className="animate" style={{ textAlign: "center", marginTop: "3rem" }}>
         <p style={labelStyle}>Keluarga yang Mengundang</p>
         <p style={familyStyle}>
           {weddingConfig.keluargaPria}
           <br />
-          <span style={{ color: "var(--gold-light)", fontSize: "1.2rem" }}>&</span>
+          <span style={{ color: "#B8964A", fontSize: "1.2rem", margin: "0.5rem 0", display: "inline-block" }}>&</span>
           <br />
           {weddingConfig.keluargaWanita}
         </p>
       </div>
 
       {/* Nama besar */}
-      <div className="animate" style={{ textAlign: "center", marginTop: "3rem" }}>
+      <div className="animate" style={{ textAlign: "center", marginTop: "4rem" }}>
         <h2 style={namesStyle}>
           {weddingConfig.pria.namaPanggilan}
           <span style={ampStyle}>&</span>
@@ -84,18 +85,11 @@ export default function Footer() {
       </div>
 
       {/* Tombol kembali ke atas */}
-      <div style={{ textAlign: "center", marginTop: "3rem" }}>
+      <div style={{ textAlign: "center", marginTop: "4rem" }}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="top-btn"
           style={topBtnStyle}
-          onMouseOver={(e: React.MouseEvent<HTMLButtonElement>) => {
-            e.currentTarget.style.background = "var(--gold)";
-            e.currentTarget.style.color = "var(--brown-dark)";
-          }}
-          onMouseOut={(e: React.MouseEvent<HTMLButtonElement>) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--gold-light)";
-          }}
         >
           ↑ Kembali ke Atas
         </button>
@@ -106,6 +100,35 @@ export default function Footer() {
         Made with 💕 for {weddingConfig.pria.namaPanggilan} & {weddingConfig.wanita.namaPanggilan}
       </p>
 
+      <style jsx>{`
+        .animate { opacity: 0; transform: translateY(20px); transition: 1s ease; }
+        .animate.visible { opacity: 1; transform: translateY(0); }
+
+        .protokol-container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.5rem;
+          maxWidth: 900px;
+          margin: 0 auto;
+        }
+
+        .top-btn:hover {
+          background: #B8964A !important;
+          color: #1a1510 !important;
+        }
+
+        /* RESPONSIVE MOBILE */
+        @media (max-width: 768px) {
+          .protokol-container {
+            grid-template-columns: 1fr; /* Stack satu per satu di HP */
+            gap: 1rem;
+          }
+          
+          footer {
+            padding: 4rem 1.5rem !important;
+          }
+        }
+      `}</style>
     </footer>
   );
 }
@@ -115,28 +138,20 @@ export default function Footer() {
 function GoldLine() {
   return (
     <div style={{
-      width: "120px",
+      width: "80px",
       height: "1px",
-      background: "linear-gradient(90deg, transparent, var(--gold), transparent)",
-      margin: "1.5rem auto",
+      background: "linear-gradient(90deg, transparent, #B8964A, transparent)",
+      margin: "2rem auto",
     }} />
   );
 }
 
-function ProtokolItem({
-  icon,
-  title,
-  desc,
-}: {
-  icon: string;
-  title: string;
-  desc: React.ReactNode;
-}) {
+function ProtokolItem({ icon, title, desc }: { icon: string; title: string; desc: React.ReactNode }) {
   return (
-    <div className="animate" style={protokolItemStyle}>
+    <div style={protokolItemStyle}>
       <span style={protokolIconStyle}>{icon}</span>
       <p style={protokolTitleStyle}>{title}</p>
-      <p style={protokolDescStyle}>{desc}</p>
+      <div style={protokolDescStyle}>{desc}</div>
     </div>
   );
 }
@@ -144,139 +159,125 @@ function ProtokolItem({
 // ─── Styles ───────────────────────────────────────────────
 
 const footerStyle: React.CSSProperties = {
-  background: "var(--brown-dark)",
+  background: "#1a1510", // Brown dark
   color: "#FAF0E0",
-  padding: "4rem 2rem",
-};
-
-const protokolGridStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: "1.5rem",
-  maxWidth: "800px",
-  margin: "0 auto 0",
+  padding: "6rem 2rem",
+  borderTop: "1px solid rgba(184, 150, 74, 0.2)",
 };
 
 const protokolItemStyle: React.CSSProperties = {
   textAlign: "center",
-  padding: "1.5rem 1rem",
-  border: "1px solid rgba(255,255,255,0.08)",
-  background: "rgba(255,255,255,0.03)",
+  padding: "2rem 1rem",
+  border: "1px solid rgba(184, 150, 74, 0.1)",
+  background: "rgba(255, 255, 255, 0.02)",
+  borderRadius: "15px",
 };
 
 const protokolIconStyle: React.CSSProperties = {
-  fontSize: "2rem",
+  fontSize: "1.8rem",
   display: "block",
   marginBottom: "0.75rem",
 };
 
 const protokolTitleStyle: React.CSSProperties = {
-  fontSize: "0.78rem",
+  fontSize: "0.7rem",
   letterSpacing: "0.2em",
   textTransform: "uppercase",
-  color: "var(--sage-light)",
-  marginBottom: "0.4rem",
+  color: "#B8964A",
+  marginBottom: "0.5rem",
 };
 
 const protokolDescStyle: React.CSSProperties = {
   fontSize: "0.85rem",
-  color: "#8B7B6B",
-  lineHeight: 1.7,
+  color: "#B8A898",
+  lineHeight: 1.6,
 };
 
 const fullDividerStyle: React.CSSProperties = {
   height: "1px",
-  background: "linear-gradient(90deg, transparent, rgba(184,150,74,0.3), transparent)",
-  margin: "3rem 0",
-  maxWidth: "600px",
-  marginLeft: "auto",
-  marginRight: "auto",
+  background: "linear-gradient(90deg, transparent, rgba(184,150,74,0.2), transparent)",
+  margin: "4rem auto",
+  maxWidth: "500px",
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: "0.75rem",
-  letterSpacing: "0.25em",
+  fontSize: "0.7rem",
+  letterSpacing: "0.3em",
   textTransform: "uppercase",
-  color: "var(--gold-light)",
+  color: "#B8964A",
 };
 
 const quoteStyle: React.CSSProperties = {
-  fontFamily: "var(--font-serif)",
-  fontSize: "1.4rem",
-  fontWeight: 300,
+  fontFamily: "serif",
+  fontSize: "1.2rem",
   fontStyle: "italic",
   color: "#D4C4A8",
   lineHeight: 1.8,
-  maxWidth: "600px",
-  margin: "1rem auto",
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5rem",
-  textAlign: "center",
+  maxWidth: "500px",
+  margin: "1.5rem auto",
 };
 
 const citeStyle: React.CSSProperties = {
-  fontSize: "0.85rem",
+  display: "block",
+  fontSize: "0.8rem",
   color: "#6B5B4B",
   fontStyle: "normal",
-  letterSpacing: "0.05em",
+  marginTop: "1rem",
 };
 
 const thanksStyle: React.CSSProperties = {
-  fontSize: "0.9rem",
-  color: "#8B7B6B",
-  maxWidth: "600px",
-  margin: "0 auto",
-  lineHeight: 1.9,
+  fontSize: "0.85rem",
+  color: "#B8A898",
+  maxWidth: "550px",
+  margin: "2rem auto",
+  lineHeight: 1.8,
   textAlign: "center",
 };
 
 const familyStyle: React.CSSProperties = {
-  fontSize: "0.95rem",
+  fontSize: "1rem",
   color: "#D4C4A8",
-  lineHeight: 2.2,
-  marginTop: "0.75rem",
-  textAlign: "center",
+  lineHeight: 1.8,
+  marginTop: "1rem",
 };
 
 const namesStyle: React.CSSProperties = {
-  fontFamily: "var(--font-serif)",
-  fontSize: "clamp(2.5rem, 6vw, 4rem)",
-  fontWeight: 300,
-  color: "var(--gold)",
-  lineHeight: 1.1,
+  fontFamily: "serif",
+  fontSize: "3rem",
+  color: "#B8964A",
+  lineHeight: 1,
 };
 
 const ampStyle: React.CSSProperties = {
   display: "block",
-  fontSize: "clamp(1.5rem, 3vw, 2rem)",
-  color: "var(--gold-light)",
-  margin: "0.3rem 0",
+  fontSize: "1.5rem",
+  color: "#FAF0E0",
+  margin: "0.5rem 0",
 };
 
 const dateStyle: React.CSSProperties = {
-  fontSize: "0.85rem",
-  color: "#4A3A2A",
-  letterSpacing: "0.15em",
-  marginTop: "0.75rem",
+  fontSize: "0.8rem",
+  color: "#6B5B4B",
+  letterSpacing: "0.2em",
+  marginTop: "1rem",
 };
 
 const topBtnStyle: React.CSSProperties = {
-  padding: "0.7rem 1.5rem",
-  border: "1px solid var(--gold)",
+  padding: "0.8rem 2rem",
+  border: "1px solid #B8964A",
   background: "transparent",
-  color: "var(--gold-light)",
-  fontFamily: "var(--font-sans)",
-  fontSize: "0.8rem",
-  letterSpacing: "0.15em",
+  color: "#B8964A",
+  fontSize: "0.75rem",
+  letterSpacing: "0.1em",
   cursor: "pointer",
+  borderRadius: "50px",
   transition: "all 0.3s",
 };
 
 const creditStyle: React.CSSProperties = {
   textAlign: "center",
-  fontSize: "0.75rem",
-  color: "#3A2A1A",
-  marginTop: "2.5rem",
-  letterSpacing: "0.1em",
+  fontSize: "0.7rem",
+  color: "#4A3A2A",
+  marginTop: "4rem",
+  opacity: 0.6,
 };
