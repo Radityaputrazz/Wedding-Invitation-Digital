@@ -12,7 +12,7 @@ export default function Cover({ onOpen, guestName }: { onOpen: () => void, guest
   // Formatting nama tamu: Huruf kapital di setiap kata
   const formattedGuest =
     guestName?.replace(/\b\w/g, (c: string) => c.toUpperCase()) ||
-    "Tamu Undangan";
+    "guestname";
 
   function handleOpen() {
     setOpen(true);
