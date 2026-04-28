@@ -23,7 +23,6 @@ export default function WeddingContainer({
   function handleOpen() {
     setIsOpen(true);
 
-    // kasih waktu animasi cover selesai
     setTimeout(() => {
       setShowCover(false);
     }, 1200);
