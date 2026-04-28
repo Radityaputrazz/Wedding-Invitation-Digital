@@ -1,7 +1,8 @@
 // app/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Cover  from "@/components/wedding/Cover";
 import Navbar from "@/components/wedding/Navbar";
 import Hero   from "@/components/wedding/Hero";
@@ -13,13 +14,20 @@ import Ucapan from "@/components/wedding/Ucapan";
 import Kado   from "@/components/wedding/Kado";
 import Footer from "@/components/wedding/Footer";
 
-export default function WeddingPage() {
+// Komponen internal untuk menangani logika SearchParams
+function WeddingContent() {
   const [isOpen, setIsOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const guestName = searchParams.get("to") || "Tamu Undangan";
 
   return (
     <main>
-      {!isOpen && <Cover 
-      onOpen={() => setIsOpen(true)} />}
+      {!isOpen && (
+        <Cover 
+          guestName={guestName} 
+          onOpen={() => setIsOpen(true)} 
+        />
+      )}
 
       {isOpen && (
         <>
@@ -35,5 +43,14 @@ export default function WeddingPage() {
         </>
       )}
     </main>
+  );
+}
+
+// Komponen Utama dengan Suspense (Wajib di Next.js jika pakai useSearchParams)
+export default function WeddingPage() {
+  return (
+    <Suspense fallback={<div style={{ background: "#0d0503", height: "100vh" }} />}>
+      <WeddingContent />
+    </Suspense>
   );
 }
