@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import WeddingPageContent from "@/components/wedding/WeddingContainer";
+import WeddingPageContent from "@/components/wedding/WeddingPageContent";
 
 type Props = {
   searchParams: { to?: string };

@@ -12,7 +12,7 @@ import Ucapan from "@/components/wedding/Ucapan";
 import Kado   from "@/components/wedding/Kado";
 import Footer from "@/components/wedding/Footer";
 
-export default function WeddingContainer({ guestName }: { guestName: string }) {
+export default function WeddingPageContent({ guestName }: { guestName: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
