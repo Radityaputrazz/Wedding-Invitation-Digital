@@ -2,6 +2,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
 
+
+
 :root {
   --cream:       #FAF6F0;
   --ivory:       #F4EDE3;
@@ -216,11 +218,23 @@ img {
   }
 
   /* Countdown font lebih kecil */
-  .countdown-num {
-    font-size: 2.5rem !important;
-  }
+ .countdown-flex {
+  flex-wrap: wrap; /* 🔥 penting */
+  gap: 0.5rem;
 }
 
+.countdown-box {
+  min-width: 65px;
+}
+
+.num {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+}
+
+.label {
+  font-size: 0.6rem;
+}
+}
 /* ─── Tablet ─────────────────────────────────────────────── */
 
 @media (max-width: 1024px) and (min-width: 769px) {

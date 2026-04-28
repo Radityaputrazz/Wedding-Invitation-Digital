@@ -18,7 +18,8 @@ export default function WeddingPage() {
 
   return (
     <main>
-      {!isOpen && <Cover onOpen={() => setIsOpen(true)} />}
+      {!isOpen && <Cover 
+      onOpen={() => setIsOpen(true)} />}
 
       {isOpen && (
         <>

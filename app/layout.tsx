@@ -3,7 +3,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react"; // 1. Import sudah benar
+import { Analytics } from "@vercel/analytics/react"; 
+import { Great_Vibes } from "next/font/google";
+
+export const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-signature",
+});
 
 export const metadata: Metadata = {
   title: "Undangan Pernikahan Radit & Keiani",

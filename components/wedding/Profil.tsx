@@ -1,12 +1,37 @@
 // components/wedding/Profil.tsx
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { weddingConfig } from "@/lib/weddingData";
+
+// Konfigurasi Foto (Silakan tambah/kurang sesuai keinginan)
+const GALLERY_PRIA = [
+  '/images/radit.jpeg',
+  '/images/radit-2.jpeg',
+  '/images/radit-3.jpeg',
+];
+
+const GALLERY_WANITA = [
+  '/images/keiani.jpg',
+  '/images/keiani-2.jpg',
+  '/images/keiani-3.jpg',
+];
 
 export default function Profil() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [indexPria, setIndexPria] = useState(0);
+  const [indexWanita, setIndexWanita] = useState(0);
 
+  // Efek Auto-Slide (Ganti gambar setiap 4 detik)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndexPria((prev) => (prev + 1) % GALLERY_PRIA.length);
+      setIndexWanita((prev) => (prev + 1) % GALLERY_WANITA.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Intersection Observer untuk animasi scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -36,10 +61,20 @@ export default function Profil() {
         <div style={styles.profileWrapper}>
           
           {/* Mempelai Pria */}
-          <div className="animate" style={styles.profileCard}>
+          <div className="animate profile-card-container" style={styles.profileCard}>
             <div style={styles.photoWrapper}>
-              <div style={styles.photoFrame} className="img-pria" />
-              <div style={styles.goldFloatingBorder} />
+              {GALLERY_PRIA.map((img, i) => (
+                <div 
+                  key={i}
+                  style={{
+                    ...styles.photoFrame,
+                    backgroundImage: `url('${img}')`,
+                    opacity: indexPria === i ? 1 : 0,
+                    zIndex: indexPria === i ? 2 : 1,
+                  }} 
+                />
+              ))}
+              <div style={styles.goldFloatingBorder} className="floating-border" />
               <div style={styles.verticalTag}>THE GROOM</div>
             </div>
             
@@ -51,12 +86,7 @@ export default function Profil() {
                 & Ibu {weddingConfig.pria.namaIbu}
               </p>
               
-              <a 
-                href={`https://instagram.com/rdtyaptraa`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="ig-button-luxury"
-              >
+              <a href={`https://instagram.com/rdtyaptraa`} target="_blank" rel="noopener noreferrer" className="ig-button-luxury">
                 <InstagramIcon />
                 <span>{weddingConfig.pria.instagram}</span>
               </a>
@@ -64,17 +94,27 @@ export default function Profil() {
           </div>
 
           {/* Divider "&" */}
-          <div className="animate" style={styles.ampersandWrapper}>
+          <div className="animate ampersand-divider" style={styles.ampersandWrapper}>
             <div style={styles.verticalLine} />
             <span style={styles.ampersandText}>&</span>
             <div style={styles.verticalLine} />
           </div>
 
           {/* Mempelai Wanita */}
-          <div className="animate" style={styles.profileCard}>
+          <div className="animate profile-card-container" style={styles.profileCard}>
             <div style={styles.photoWrapper}>
-              <div style={styles.photoFrame} className="img-wanita" />
-              <div style={styles.goldFloatingBorder} />
+              {GALLERY_WANITA.map((img, i) => (
+                <div 
+                  key={i}
+                  style={{
+                    ...styles.photoFrame,
+                    backgroundImage: `url('${img}')`,
+                    opacity: indexWanita === i ? 1 : 0,
+                    zIndex: indexWanita === i ? 2 : 1,
+                  }} 
+                />
+              ))}
+              <div style={styles.goldFloatingBorder} className="floating-border-right" />
               <div style={styles.verticalTagRight}>THE BRIDE</div>
             </div>
             
@@ -86,12 +126,7 @@ export default function Profil() {
                 & Ibu {weddingConfig.wanita.namaIbu}
               </p>
 
-              <a 
-                href={`https://instagram.com/keiani`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="ig-button-luxury"
-              >
+              <a href={`https://instagram.com/keiani`} target="_blank" rel="noopener noreferrer" className="ig-button-luxury">
                 <InstagramIcon />
                 <span>{weddingConfig.wanita.instagram}</span>
               </a>
@@ -102,117 +137,188 @@ export default function Profil() {
       </div>
 
       <style jsx>{`
-        .img-pria { background-image: url('/images/radit.jpeg'); background-size: cover; background-position: center; }
-        .img-wanita { background-image: url('/images/keiani.jpg'); background-size: cover; background-position: center; }
-
+        .animate {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .animate.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .floating-border { animation: floatBorder 6s infinite ease-in-out; }
+        .floating-border-right { animation: floatBorder 6s infinite ease-in-out reverse; }
+        @keyframes floatBorder {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(10px, 10px); }
+        }
         .ig-button-luxury {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          padding: 10px 24px;
-          border: 1px solid rgba(184, 150, 74, 0.4);
+          padding: 12px 28px;
+          border: 1px solid rgba(184, 150, 74, 0.3);
           border-radius: 50px;
-          color: var(--gold);
+          color: #B8964A;
           text-decoration: none;
-          font-size: 0.75rem;
-          letter-spacing: 0.2em;
+          font-size: 0.7rem;
+          letter-spacing: 0.25em;
           text-transform: uppercase;
-          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-          background: rgba(184, 150, 74, 0.03);
-          margin-top: 10px;
+          transition: all 0.4s ease;
+          background: rgba(184, 150, 74, 0.02);
+          margin-top: 1rem;
         }
-
         .ig-button-luxury:hover {
-          background: var(--gold);
-          color: #000;
+          background: #B8964A;
+          color: #0d0503;
           transform: translateY(-5px);
-          box-shadow: 0 10px 20px rgba(184, 150, 74, 0.2);
-          border-color: var(--gold);
+          box-shadow: 0 15px 30px rgba(184, 150, 74, 0.2);
         }
-
-        .ig-button-luxury:hover :global(svg) {
-          stroke: #000;
+        @media (max-width: 768px) {
+          .ampersand-divider { display: none; }
+          .profile-card-container { margin-bottom: 4rem; }
         }
       `}</style>
     </section>
   );
 }
 
-// Sub-komponen Ikon untuk kebersihan kode
 const InstagramIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
   </svg>
 );
 
-// ─── STYLES (Night Gala Premium) ──────────────────────────
-
 const styles = {
   section: {
     background: "#0d0503",
-    padding: "10rem 1.5rem",
+    padding: "clamp(6rem, 15vw, 10rem) 1.5rem",
     color: "#FAF0E0",
+    overflow: "hidden",
   } as React.CSSProperties,
 
-  container: { maxWidth: "1100px", margin: "0 auto" } as React.CSSProperties,
+  container: { maxWidth: "1200px", margin: "0 auto" } as React.CSSProperties,
 
-  header: { textAlign: "center", marginBottom: "8rem" } as React.CSSProperties,
+  header: { textAlign: "center", marginBottom: "clamp(4rem, 10vw, 8rem)" } as React.CSSProperties,
 
-  bismillah: { fontSize: "1.8rem", color: "var(--gold)", marginBottom: "1.5rem", fontFamily: "serif" } as React.CSSProperties,
+  bismillah: { 
+    fontSize: "clamp(1.5rem, 5vw, 2.2rem)", 
+    color: "#B8964A", 
+    marginBottom: "1.5rem", 
+    fontFamily: "var(--font-serif)" 
+  } as React.CSSProperties,
 
-  introText: { fontSize: "1rem", lineHeight: "1.8", opacity: 0.7, maxWidth: "600px", margin: "0 auto" } as React.CSSProperties,
+  introText: { 
+    fontSize: "0.95rem", 
+    lineHeight: "2", 
+    opacity: 0.6, 
+    maxWidth: "650px", 
+    margin: "0 auto",
+  } as React.CSSProperties,
 
   profileWrapper: {
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
-    alignItems: "flex-start",
-    gap: "1rem",
+    alignItems: "stretch",
+    gap: "2rem",
   } as React.CSSProperties,
 
-  profileCard: { flex: "1", minWidth: "320px", display: "flex", flexDirection: "column", alignItems: "center" } as React.CSSProperties,
+  profileCard: { 
+    flex: "1", 
+    minWidth: "300px", 
+    display: "flex", 
+    flexDirection: "column", 
+    alignItems: "center" 
+  } as React.CSSProperties,
 
-  photoWrapper: { position: "relative", width: "260px", height: "380px", marginBottom: "3.5rem" } as React.CSSProperties,
+  photoWrapper: { 
+    position: "relative", 
+    width: "min(280px, 80vw)", 
+    height: "min(400px, 110vw)", 
+    marginBottom: "3rem" 
+  } as React.CSSProperties,
 
   photoFrame: { 
-    width: "100%", height: "100%", borderRadius: "20px", position: "relative", zIndex: 2,
-    border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 30px 60px rgba(0,0,0,0.5)" 
+    position: "absolute",
+    top: 0, left: 0,
+    width: "100%", height: "100%", 
+    borderRadius: "24px", 
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    border: "1px solid rgba(255,255,255,0.05)", 
+    boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+    transition: "opacity 1.5s ease-in-out", // Kehalusan transisi cross-fade
   } as React.CSSProperties,
 
   goldFloatingBorder: {
-    position: "absolute", top: "25px", left: "-20px", width: "100%", height: "100%",
-    border: "1px solid var(--gold)", borderRadius: "20px", zIndex: 1, opacity: 0.3
+    position: "absolute", 
+    top: "20px", 
+    left: "-20px", 
+    width: "100%", 
+    height: "100%",
+    border: "1px solid #B8964A", 
+    borderRadius: "24px", 
+    zIndex: 1, 
+    opacity: 0.25
   } as React.CSSProperties,
 
   verticalTag: {
-    position: "absolute", left: "-60px", bottom: "60px", transform: "rotate(-90deg)",
-    fontSize: "0.65rem", letterSpacing: "0.8em", color: "var(--gold)", opacity: 0.5
+    position: "absolute", left: "-70px", bottom: "80px", transform: "rotate(-90deg)",
+    fontSize: "0.6rem", letterSpacing: "0.8em", color: "#B8964A", opacity: 0.4
   } as React.CSSProperties,
 
   verticalTagRight: {
-    position: "absolute", right: "-60px", bottom: "60px", transform: "rotate(90deg)",
-    fontSize: "0.65rem", letterSpacing: "0.8em", color: "var(--gold)", opacity: 0.5
+    position: "absolute", right: "-70px", bottom: "80px", transform: "rotate(90deg)",
+    fontSize: "0.6rem", letterSpacing: "0.8em", color: "#B8964A", opacity: 0.4
   } as React.CSSProperties,
 
-  infoContent: { textAlign: "center", width: "100%" } as React.CSSProperties,
+  infoContent: { textAlign: "center", width: "100%", padding: "0 1rem" } as React.CSSProperties,
 
   mainName: {
-    fontFamily: "var(--font-serif)", fontSize: "2.5rem", color: "var(--gold)", 
-    fontWeight: 300, marginBottom: "1.2rem", letterSpacing: "0.02em"
+    fontFamily: "var(--font-serif)", 
+    fontSize: "clamp(2rem, 5vw, 2.8rem)", 
+    color: "#B8964A", 
+    fontWeight: 300, 
+    marginBottom: "1rem", 
+    letterSpacing: "0.03em"
   } as React.CSSProperties,
 
-  parentLabel: { fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.4em", opacity: 0.4, marginBottom: "0.8rem" } as React.CSSProperties,
+  parentLabel: { 
+    fontSize: "0.6rem", 
+    textTransform: "uppercase", 
+    letterSpacing: "0.5em", 
+    color: "rgba(184, 150, 74, 0.5)", 
+    marginBottom: "0.8rem" 
+  } as React.CSSProperties,
 
-  parentNames: { fontSize: "1.1rem", lineHeight: "1.8", fontWeight: 300, marginBottom: "1.5rem" } as React.CSSProperties,
+  parentNames: { 
+    fontSize: "1.05rem", 
+    lineHeight: "1.9", 
+    fontWeight: 300, 
+    marginBottom: "1.5rem",
+    opacity: 0.8
+  } as React.CSSProperties,
 
   ampersandWrapper: {
     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-    padding: "0 3rem", alignSelf: "stretch"
+    padding: "0 2rem", alignSelf: "stretch"
   } as React.CSSProperties,
 
-  verticalLine: { width: "1px", flex: 1, background: "linear-gradient(to bottom, transparent, var(--gold), transparent)", opacity: 0.2 } as React.CSSProperties,
+  verticalLine: { 
+    width: "1px", 
+    flex: 1, 
+    background: "linear-gradient(to bottom, transparent, rgba(184, 150, 74, 0.3), transparent)" 
+  } as React.CSSProperties,
 
-  ampersandText: { fontFamily: "var(--font-serif)", fontSize: "3.5rem", color: "var(--gold)", margin: "1.5rem 0", opacity: 0.3, fontStyle: "italic" } as React.CSSProperties,
+  ampersandText: { 
+    fontFamily: "var(--font-serif)", 
+    fontSize: "4rem", 
+    color: "#B8964A", 
+    margin: "2rem 0", 
+    opacity: 0.2, 
+    fontStyle: "italic" 
+  } as React.CSSProperties,
 };

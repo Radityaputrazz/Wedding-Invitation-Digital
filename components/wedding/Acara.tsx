@@ -34,7 +34,9 @@ export default function Acara() {
           <h2 style={sectionTitleStyle}>Waktu & Tempat</h2>
           <div style={ornamentWrapper}>
             <div style={ornamentLine} />
-            <span style={{ fontSize: "1.2rem", color: "#B8964A" }}>✦</span>
+            <span style={{ fontSize: "1rem", color: "rgba(184,150,74,0.9)", letterSpacing: "0.2em" }}>
+              ◆
+            </span>
             <div style={ornamentLine} />
           </div>
         </div>
@@ -76,7 +78,6 @@ export default function Acara() {
             </div>
           </div>
         </div>
-
       </div>
 
       <style jsx>{`
@@ -100,13 +101,11 @@ function EventCard({ type, name, data, icon }: { type: string; name: string; dat
   return (
     <div className="animate card-hover" style={cardStyle}>
       <div style={badgeStyle}>{type}</div>
-      
       <div style={iconCircleStyle}>{icon}</div>
-      
       <h3 style={cardNameStyle}>{name}</h3>
       
       <div style={cardInfoBox}>
-        {/* Kontainer Tanggal & Waktu yang Diperbaiki */}
+        {/* Kontainer Tanggal & Waktu yang Diperbaiki Presisinya */}
         <div className="info-container" style={infoContainerStyle}>
           <div style={infoItem}>
             <div style={infoIconBox}>🗓</div>
@@ -120,7 +119,7 @@ function EventCard({ type, name, data, icon }: { type: string; name: string; dat
             <div style={infoIconBox}>⏰</div>
             <div style={infoTextGroup}>
               <span style={infoLabelText}>Waktu Acara</span>
-              <span style={infoValueText}>{data.waktu} WIB</span>
+              <span style={infoValueText}>{data.waktu}</span>
             </div>
           </div>
         </div>
@@ -150,21 +149,12 @@ function EventCard({ type, name, data, icon }: { type: string; name: string; dat
           background: #B8964A !important; 
           color: #1a1510 !important;
         }
-        @media (max-width: 480px) {
-          .info-container {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 1.2rem !important;
-            width: fit-content !important;
-            margin: 0 auto !important;
-          }
-        }
       `}</style>
     </div>
   );
 }
 
-// ─── Sub-komponen: Countdown ───────────────────────────────
+// ─── Sub-komponen: Countdown & Helpers ─────────────────────
 
 function Countdown() {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
@@ -209,8 +199,6 @@ function Countdown() {
   );
 }
 
-// ─── Helper Functions ─────────────────────────────────────
-
 function CalendarButton({ href, label, icon, download }: any) {
   return (
     <a href={href} download={download} target="_blank" rel="noopener noreferrer" style={calBtnStyle} className="cal-btn">
@@ -238,21 +226,64 @@ function icalContent() {
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(content)}`;
 }
 
-// ─── Styles ───────────────────────────────────────────────
+// ─── Styles (Presisi & Responsif) ───────────────────────────
 
-const sectionStyle: React.CSSProperties = { background: "#1a1510", padding: "8rem 1.5rem", position: "relative" };
-const innerStyle: React.CSSProperties = { maxWidth: "1000px", margin: "0 auto" };
-const cardsGridStyle: React.CSSProperties = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2.5rem", marginTop: "4rem" };
-const sectionLabelStyle: React.CSSProperties = { fontSize: "0.75rem", letterSpacing: "0.5em", textTransform: "uppercase", color: "#B8964A", marginBottom: "0.5rem" };
-const sectionTitleStyle: React.CSSProperties = { fontFamily: "serif", fontSize: "clamp(2.5rem, 6vw, 3.5rem)", fontWeight: 300, color: "#FAF0E0" };
-const ornamentWrapper: React.CSSProperties = { display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", marginTop: "1.5rem" };
-const ornamentLine: React.CSSProperties = { width: "60px", height: "1px", background: "linear-gradient(90deg, transparent, #B8964A, transparent)" };
+const sectionStyle: React.CSSProperties = {
+  background: "#1a1510",
+  padding: "clamp(4rem, 10vw, 8rem) 1.2rem",
+  position: "relative",
+};
 
-// Card Styles
+const innerStyle: React.CSSProperties = {
+  maxWidth: "1100px",
+  margin: "0 auto",
+  width: "100%",
+  padding: "0 clamp(0.5rem, 4vw, 1.5rem)",
+};
+
+const sectionLabelStyle: React.CSSProperties = {
+  fontSize: "clamp(0.65rem, 2.5vw, 0.75rem)",
+  letterSpacing: "0.6em",
+  textTransform: "uppercase",
+  color: "rgba(184,150,74,0.85)",
+  marginBottom: "0.6rem",
+};
+
+const sectionTitleStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)",
+  fontSize: "clamp(2.2rem, 7vw, 3.5rem)",
+  fontWeight: 300,
+  color: "#FAF0E0",
+  letterSpacing: "0.04em",
+  lineHeight: 1.2,
+  textShadow: "0 6px 25px rgba(0,0,0,0.4)",
+};
+
+const ornamentWrapper: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "clamp(12px, 4vw, 24px)",
+  marginTop: "1.8rem",
+};
+
+const ornamentLine: React.CSSProperties = {
+  width: "clamp(40px, 10vw, 70px)",
+  height: "1px",
+  background: "linear-gradient(90deg, transparent, rgba(184,150,74,0.9), transparent)",
+};
+
+const cardsGridStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+  gap: "clamp(2rem, 5vw, 3rem)",
+  marginTop: "3rem",
+};
+
 const cardStyle: React.CSSProperties = {
   position: "relative",
   textAlign: "center",
-  padding: "4.5rem 2rem 3.5rem",
+  padding: "clamp(3.5rem, 8vw, 5rem) 1.5rem 3rem",
   background: "rgba(255,255,255,0.02)",
   backdropFilter: "blur(12px)",
   borderRadius: "32px",
@@ -264,57 +295,179 @@ const badgeStyle: React.CSSProperties = {
   top: "0", left: "50%", transform: "translateX(-50%)",
   background: "linear-gradient(180deg, #B8964A, #8a6d2f)",
   color: "#1a1510",
-  padding: "8px 24px",
-  fontSize: "0.65rem",
+  padding: "10px 28px",
+  fontSize: "0.7rem",
   fontWeight: "bold",
   letterSpacing: "2px",
   textTransform: "uppercase",
-  borderBottomLeftRadius: "15px",
-  borderBottomRightRadius: "15px",
+  borderBottomLeftRadius: "16px",
+  borderBottomRightRadius: "16px",
 };
 
 const iconCircleStyle: React.CSSProperties = {
-  display: "flex", alignItems: "center", justifyContent: "center",
-  width: "65px", height: "65px", margin: "0 auto 1.5rem",
-  fontSize: "1.8rem", background: "rgba(184,150,74,0.08)",
-  border: "1px solid rgba(184,150,74,0.3)", borderRadius: "50%",
+  width: "70px",
+  height: "70px",
+  fontSize: "1.8rem",
+  margin: "0 auto 1.5rem",
+  background: "rgba(184,150,74,0.08)",
+  border: "1px solid rgba(184,150,74,0.3)",
+  borderRadius: "50%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
-const cardNameStyle: React.CSSProperties = { fontFamily: "serif", fontSize: "2.2rem", color: "#FAF0E0", marginBottom: "2.5rem" };
+const cardNameStyle: React.CSSProperties = {
+  fontFamily: "serif",
+  fontSize: "clamp(1.8rem, 6vw, 2.2rem)",
+  color: "#FAF0E0",
+  marginBottom: "2.5rem",
+};
 
-const cardInfoBox: React.CSSProperties = { display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" };
+const cardInfoBox: React.CSSProperties = { 
+  display: "flex", 
+  flexDirection: "column", 
+  alignItems: "center", 
+  gap: "1.5rem",
+  width: "100%"
+};
 
-// Info Item Styles (The Fix)
+// PENYELARAS POSISI (KUNCI JAWABAN)
 const infoContainerStyle: React.CSSProperties = {
-  display: "flex", justifyContent: "space-between", width: "100%", maxWidth: "360px", gap: "1rem"
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center", // Memastikan grup teks ada di tengah kartu
+  gap: "1.2rem",
+  width: "100%",
 };
 
-const infoItem: React.CSSProperties = { display: "flex", alignItems: "center", gap: "12px", textAlign: "left" };
+const infoItem: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "1rem",
+  textAlign: "left",
+  width: "240px", // Mengunci lebar agar ikon kalender & jam sejajar lurus
+};
 
 const infoIconBox: React.CSSProperties = {
-  fontSize: "1.3rem", background: "rgba(184, 150, 74, 0.15)",
-  padding: "10px", borderRadius: "12px", color: "#B8964A",
-  display: "flex", alignItems: "center", justifyContent: "center"
+  fontSize: "1.2rem",
+  background: "rgba(184,150,74,0.12)",
+  minWidth: "46px", // Lebar kotak ikon dikunci agar teks di sampingnya sejajar
+  height: "46px",
+  borderRadius: "12px",
+  color: "#B8964A",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexShrink: 0,
 };
 
-const infoTextGroup: React.CSSProperties = { display: "flex", flexDirection: "column" };
-const infoLabelText: React.CSSProperties = { fontSize: "0.6rem", textTransform: "uppercase", color: "#B8964A", letterSpacing: "1px", marginBottom: "2px", fontWeight: 600 };
-const infoValueText: React.CSSProperties = { fontSize: "0.9rem", color: "#FAF0E0", fontWeight: 500 };
+const infoTextGroup: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+};
 
-const cardDividerStyle: React.CSSProperties = { width: "80px", height: "1px", background: "radial-gradient(circle, #B8964A 0%, transparent 100%)", opacity: 0.5, margin: "0.5rem 0" };
+const infoLabelText: React.CSSProperties = {
+  fontSize: "0.6rem",
+  textTransform: "uppercase",
+  color: "rgba(184,150,74,0.8)",
+  letterSpacing: "0.12em",
+  fontWeight: 600,
+};
 
-const locationBoxStyle: React.CSSProperties = { textAlign: "center" };
-const namaGedungStyle: React.CSSProperties = { display: "block", fontSize: "1.25rem", color: "#B8964A", marginBottom: "6px", fontFamily: "serif" };
-const alamatTextStyle: React.CSSProperties = { fontSize: "0.85rem", color: "#B8A898", lineHeight: 1.6, maxWidth: "260px" };
+const infoValueText: React.CSSProperties = {
+  fontSize: "0.95rem",
+  color: "#FAF0E0",
+  fontWeight: 500,
+};
+
+const cardDividerStyle: React.CSSProperties = {
+  width: "80px",
+  height: "1px",
+  margin: "0.5rem auto",
+  background: "linear-gradient(90deg, transparent, rgba(184,150,74,0.8), transparent)",
+  opacity: 0.5,
+};
+
+const locationBoxStyle: React.CSSProperties = {
+  textAlign: "center",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "0.5rem",
+};
+
+const namaGedungStyle: React.CSSProperties = {
+  fontSize: "clamp(1.3rem, 5vw, 1.6rem)",
+  fontFamily: "var(--font-serif)",
+  color: "#E6C27A",
+  background: "linear-gradient(180deg, #E6C27A, #B8964A)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+};
+
+const alamatTextStyle: React.CSSProperties = {
+  fontSize: "0.85rem",
+  color: "rgba(250,240,224,0.6)",
+  lineHeight: 1.6,
+  maxWidth: "260px",
+};
 
 const mapsBtnStyle: React.CSSProperties = {
-  display: "inline-block", marginTop: "2.5rem", padding: "0.8rem 2.2rem",
-  fontSize: "0.8rem", textDecoration: "none", color: "#B8964A",
-  border: "1px solid #B8964A", borderRadius: "50px", transition: "0.3s", fontWeight: 500
+  display: "inline-block",
+  marginTop: "2.5rem",
+  padding: "0.9rem 2.5rem",
+  fontSize: "0.8rem",
+  textDecoration: "none",
+  color: "#B8964A",
+  border: "1px solid #B8964A",
+  borderRadius: "999px",
+  transition: "0.3s",
+  fontWeight: 600,
 };
 
-const countdownSectionStyle: React.CSSProperties = { marginTop: "6rem", textAlign: "center" };
-const countdownCardStyle: React.CSSProperties = { padding: "4rem 1rem", background: "rgba(255,255,255,0.01)", borderRadius: "32px", border: "1px dashed rgba(184,150,74,0.15)" };
-const countdownLabelStyle: React.CSSProperties = { fontSize: "0.8rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "#B8964A" };
-const calBtnsStyle: React.CSSProperties = { display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "1.2rem", marginTop: "3.5rem" };
-const calBtnStyle: React.CSSProperties = { display: "flex", alignItems: "center", gap: "10px", padding: "0.8rem 1.8rem", fontSize: "0.85rem", textDecoration: "none", color: "#FAF0E0", border: "1px solid #B8964A", borderRadius: "12px", transition: "0.3s" };
+const countdownSectionStyle: React.CSSProperties = {
+  marginTop: "clamp(5rem, 15vw, 8rem)",
+  textAlign: "center",
+};
+
+const countdownCardStyle: React.CSSProperties = {
+  padding: "clamp(3rem, 8vw, 4.5rem) 1.5rem",
+  background: "rgba(255,255,255,0.02)",
+  backdropFilter: "blur(14px)",
+  borderRadius: "32px",
+  border: "1px solid rgba(184,150,74,0.15)",
+  boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+  position: "relative",
+};
+
+const countdownLabelStyle: React.CSSProperties = {
+  fontSize: "0.75rem",
+  letterSpacing: "0.4em",
+  textTransform: "uppercase",
+  color: "rgba(184,150,74,0.8)",
+};
+
+const calBtnsStyle: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+  flexWrap: "wrap",
+  gap: "1rem",
+  marginTop: "3rem",
+};
+
+const calBtnStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "10px",
+  padding: "0.8rem 1.8rem",
+  fontSize: "0.8rem",
+  textDecoration: "none",
+  color: "#FAF0E0",
+  border: "1px solid #B8964A",
+  borderRadius: "14px",
+  transition: "0.3s",
+  minWidth: "220px",
+};

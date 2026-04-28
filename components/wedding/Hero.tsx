@@ -8,74 +8,129 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Animasi masuk yang halus
-    const timer = setTimeout(() => setMounted(true), 200);
+    const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <section style={styles.heroSection}>
-      {/* 1. Background Layer (Tetap Full Screen) */}
+      {/* Background Layer */}
       <div style={styles.bgWrapper}>
-        <div style={styles.bgImage} />
-        <div style={styles.bgOverlay} />
+        <div 
+          style={{
+            ...styles.bgImage,
+            transform: mounted ? "scale(1)" : "scale(1.1)",
+            transition: "transform 10s ease-out, opacity 2s ease-in",
+            opacity: mounted ? 1 : 0
+          }} 
+        />
+        <div style={styles.bgOverlayTop} />
+        <div style={styles.bgOverlayBottom} />
+        <div style={styles.bgOverlayRadial} />
       </div>
 
-      {/* 2. Content Layer (Didorong ke Bawah) */}
+      {/* Ornamen Sudut (Frame) */}
+      <div style={{ ...styles.corner, top: "2rem", left: "2rem", borderWidth: "1px 0 0 1px" }} />
+      <div style={{ ...styles.corner, top: "2rem", right: "2rem", borderWidth: "1px 1px 0 0" }} />
+      <div style={{ ...styles.corner, bottom: "2rem", left: "2rem", borderWidth: "0 0 1px 1px" }} />
+      <div style={{ ...styles.corner, bottom: "2rem", right: "2rem", borderWidth: "0 1px 1px 0" }} />
+
+      {/* Konten Utama */}
       <div style={{
         ...styles.content,
         opacity: mounted ? 1 : 0,
         transform: mounted ? "translateY(0)" : "translateY(30px)",
       }}>
-        
-        {/* Bismillah opsional, jika dilepas, konten otomatis naik sedikit */}
-        <p style={styles.bismillah}>
-          بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ
-        </p>
-        
-        <p style={styles.subTitle}>Mempelai Pria & Wanita</p>
-        
+        {/* Bismillah */}
+        <p style={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ</p>
+
+        {/* Ornamen Atas */}
+        <div style={styles.ornamentRow}>
+          <div style={styles.ornLine} />
+          <span style={styles.ornDiamond}>◆</span>
+          <div style={styles.ornLine} />
+        </div>
+
+        {/* Title */}
+        <p style={styles.subTitle}>The Wedding Of</p>
+
+        {/* Nama Mempelai */}
         <div style={styles.nameWrapper}>
-          <h1 style={styles.mainName}>{weddingConfig.pria.namaPanggilan}</h1>
-          <span style={styles.ampersand}>&</span>
-          <h1 style={styles.mainName}>{weddingConfig.wanita.namaPanggilan}</h1>
+          <h1 style={styles.mainName}>
+            {weddingConfig.pria.namaPanggilan}
+          </h1>
+
+          <div style={styles.ampRow}>
+            <div style={styles.ampLine} />
+            <span style={styles.ampersand}>&</span>
+            <div style={styles.ampLine} />
+          </div>
+
+          <h1 style={styles.mainName}>
+            {weddingConfig.wanita.namaPanggilan}
+          </h1>
         </div>
 
-        <div style={styles.dividerWrapper}>
-          <div style={styles.line} />
+        {/* Ornamen Bawah Nama */}
+        <div style={styles.ornamentRow}>
+          <div style={styles.ornLine} />
+          <span style={styles.ornDiamond}>◆</span>
+          <div style={styles.ornLine} />
+        </div>
+
+        {/* Tanggal Box */}
+        <div style={styles.dateBox}>
+          <p style={styles.dateLabel}>Hari Pernikahan</p>
           <p style={styles.dateText}>{weddingConfig.akad.tanggal}</p>
-          <div style={styles.line} />
         </div>
 
+        {/* Lokasi Singkat */}
         <p style={styles.locationText}>
-          {weddingConfig.resepsi.namaGedung} — Jakarta
+          {weddingConfig.resepsi.namaGedung} &nbsp;·&nbsp; Jakarta
         </p>
       </div>
 
-      {/* 3. Scroll Indicator (Di paling bawah) */}
+      {/* Scroll Indicator */}
       <div style={styles.scrollIndicator}>
+        <p style={styles.scrollLabel}>Scroll Down</p>
         <div className="mouse-line" />
       </div>
 
       <style jsx>{`
         .mouse-line {
-          width: 2px;
-          height: 50px;
-          background: linear-gradient(to bottom, var(--gold), transparent);
+          width: 1px;
+          height: 40px;
+          background: linear-gradient(to bottom, #B8964A, transparent);
+          margin: 0.5rem auto;
           animation: scrollDown 2s infinite cubic-bezier(0.65, 0, 0.35, 1);
         }
         @keyframes scrollDown {
-          0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
-          40% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-          80% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+          0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+          40%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+          80%  { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
           100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+        }
+        .hero-btn-primary, .hero-btn-secondary {
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+        }
+        .hero-btn-primary:hover {
+          background: #B8964A !important;
+          color: #1a1510 !important;
+          border-color: #B8964A !important;
+          letter-spacing: 0.3em !important;
+        }
+        .hero-btn-secondary:hover {
+          background: rgba(255,255,255,0.05) !important;
+          border-color: #FAF0E0 !important;
+          color: #FAF0E0 !important;
         }
       `}</style>
     </section>
   );
 }
 
-// ─── CLEAN STYLES OBJECT ─────────────────────────────────────
+// ─── Styles ───────────────────────────────────────────────
 
 const styles = {
   heroSection: {
@@ -84,10 +139,10 @@ const styles = {
     position: "relative",
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "center", // ◄ HAPUS INI agar didorong oleh padding-top
     alignItems: "center",
+    justifyContent: "center",
     overflow: "hidden",
-    background: "#0d0503", // Warna dasar gelap
+    background: "#0d0503",
   } as React.CSSProperties,
 
   bgWrapper: {
@@ -99,47 +154,84 @@ const styles = {
   bgImage: {
     position: "absolute",
     inset: 0,
-    backgroundImage: `url('/images/cover.png')`, // Ganti dengan path foto utama statis
+    backgroundImage: `url('/images/cover.png')`,
     backgroundSize: "cover",
     backgroundPosition: "center 25%",
-    filter: "grayscale(15%)", // Sedikit desaturate untuk kesan klasik
+    filter: "grayscale(20%) brightness(0.7)",
   } as React.CSSProperties,
 
-  bgOverlay: {
+  bgOverlayTop: {
     position: "absolute",
     inset: 0,
-    // Overlay radial: terang di tengah, gelap di pinggir
-    background: "radial-gradient(circle at center, rgba(26,21,16,0.3) 0%, rgba(13,5,3,0.9) 100%)",
+    background: "linear-gradient(to bottom, rgba(13,5,3,0.8) 0%, transparent 40%)",
+  } as React.CSSProperties,
+
+  bgOverlayBottom: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(to top, rgba(13,5,3,0.9) 0%, transparent 50%)",
+  } as React.CSSProperties,
+
+  bgOverlayRadial: {
+    position: "absolute",
+    inset: 0,
+    background: "radial-gradient(ellipse at center, transparent 20%, rgba(13,5,3,0.6) 100%)",
+  } as React.CSSProperties,
+
+  corner: {
+    position: "absolute",
+    width: "40px",
+    height: "40px",
+    borderStyle: "solid",
+    borderColor: "rgba(184,150,74,0.3)",
+    zIndex: 2,
+    pointerEvents: "none",
   } as React.CSSProperties,
 
   content: {
     position: "relative",
-    zIndex: 2,
+    zIndex: 3,
     textAlign: "center",
     padding: "0 2rem",
-    // ─── PERBAIKAN DI SINI ───
-    paddingTop: "15vh", // ◄ Ini yang mendorong konten turun (15% dari tinggi layar)
-    // ────────────────────────
     width: "100%",
     maxWidth: "800px",
-    transition: "all 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+    transition: "all 2s cubic-bezier(0.22, 1, 0.36, 1)",
   } as React.CSSProperties,
 
   bismillah: {
-    color: "#FAF0E0",
-    fontSize: "1.3rem",
+    color: "rgba(250,240,224,0.7)",
+    fontSize: "1.1rem",
     fontWeight: 300,
-    opacity: 0.7,
-    marginBottom: "2rem",
-    letterSpacing: "0.1em",
+    marginBottom: "1.2rem",
+    letterSpacing: "0.15em",
+  } as React.CSSProperties,
+
+  ornamentRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.75rem",
+    width: "140px",
+    margin: "0.8rem auto",
+  } as React.CSSProperties,
+
+  ornLine: {
+    flex: 1,
+    height: "1px",
+    background: "linear-gradient(90deg, transparent, #B8964A)",
+  } as React.CSSProperties,
+
+  ornDiamond: {
+    color: "#B8964A",
+    fontSize: "0.45rem",
   } as React.CSSProperties,
 
   subTitle: {
-    color: "var(--gold)",
-    fontSize: "0.8rem",
+    color: "rgba(184,150,74,0.8)",
+    fontSize: "0.7rem",
     letterSpacing: "0.6em",
     textTransform: "uppercase",
-    marginBottom: "1rem",
+    margin: "1.5rem 0",
     fontWeight: 300,
   } as React.CSSProperties,
 
@@ -147,64 +239,122 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "0.2rem",
+    margin: "1rem 0",
   } as React.CSSProperties,
 
   mainName: {
     fontFamily: "var(--font-serif)",
-    fontSize: "clamp(3rem, 9vw, 6rem)", // Responsif
+    fontSize: "clamp(3.5rem, 12vw, 6rem)",
     color: "#FAF0E0",
     fontWeight: 300,
-    lineHeight: 1,
-    textShadow: "0 10px 40px rgba(0,0,0,0.6)", // Glow tipis agar kontras
+    lineHeight: 0.9,
+    letterSpacing: "0.02em",
+    textShadow: "0 10px 40px rgba(0,0,0,0.6)",
   } as React.CSSProperties,
 
-  ampersand: {
-    fontFamily: "var(--font-serif)",
-    color: "var(--gold)",
-    fontSize: "2.5rem",
-    fontStyle: "italic",
-    margin: "0.8rem 0",
-    opacity: 0.8,
-  } as React.CSSProperties,
-
-  dividerWrapper: {
+  ampRow: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    gap: "20px",
-    marginTop: "3rem",
+    gap: "1.5rem",
+    margin: "1rem auto",
+    width: "220px",
   } as React.CSSProperties,
 
-  line: {
-    width: "50px",
+  ampLine: {
+    flex: 1,
     height: "1px",
     background: "rgba(184,150,74,0.3)",
   } as React.CSSProperties,
 
-  dateText: {
-    color: "#FAF0E0",
-    fontSize: "0.95rem",
+  ampersand: {
+    fontFamily: "var(--font-serif)",
+    color: "#B8964A",
+    fontSize: "2.8rem",
+    fontStyle: "italic",
+    lineHeight: 1,
+  } as React.CSSProperties,
+
+  dateBox: {
+    display: "inline-block",
+    padding: "0.8rem 2.2rem",
+    border: "1px solid rgba(184,150,74,0.2)",
+    background: "rgba(184,150,74,0.03)",
+    marginTop: "2rem",
+    backdropFilter: "blur(8px)",
+  } as React.CSSProperties,
+
+  dateLabel: {
+    fontSize: "0.6rem",
     letterSpacing: "0.4em",
     textTransform: "uppercase",
-    fontWeight: 300,
+    color: "rgba(184,150,74,0.5)",
+    marginBottom: "0.4rem",
+  } as React.CSSProperties,
+
+  dateText: {
+    color: "#FAF0E0",
+    fontSize: "0.9rem",
+    letterSpacing: "0.4em",
+    textTransform: "uppercase",
+    fontWeight: 400,
+  } as React.CSSProperties,
+
+  ctaRow: {
+    display: "flex",
+    gap: "1.2rem",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    marginTop: "3rem",
+  } as React.CSSProperties,
+
+  btnPrimary: {
+    padding: "0.9rem 2.2rem",
+    background: "rgba(184,150,74,0.1)",
+    border: "1px solid rgba(184,150,74,0.4)",
+    color: "#B8964A",
+    fontSize: "0.7rem",
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    textDecoration: "none",
+    backdropFilter: "blur(10px)",
+    display: "inline-block",
+    fontWeight: 600,
+  } as React.CSSProperties,
+
+  btnSecondary: {
+    padding: "0.9rem 2.2rem",
+    background: "transparent",
+    border: "1px solid rgba(255,255,255,0.15)",
+    color: "rgba(255,255,255,0.6)",
+    fontSize: "0.7rem",
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    textDecoration: "none",
+    display: "inline-block",
   } as React.CSSProperties,
 
   locationText: {
     color: "rgba(184,150,74,0.5)",
-    fontSize: "0.75rem",
-    letterSpacing: "0.2em",
+    fontSize: "0.7rem",
+    letterSpacing: "0.25em",
     textTransform: "uppercase",
-    marginTop: "0.8rem",
-    fontWeight: 300,
+    marginTop: "1.5rem",
   } as React.CSSProperties,
 
   scrollIndicator: {
     position: "absolute",
-    bottom: "50px",
+    bottom: "2rem",
     left: "50%",
     transform: "translateX(-50%)",
     zIndex: 2,
-    opacity: 0.6,
+    textAlign: "center",
+  } as React.CSSProperties,
+
+  scrollLabel: {
+    fontSize: "0.55rem",
+    letterSpacing: "0.4em",
+    textTransform: "uppercase",
+    color: "rgba(184,150,74,0.4)",
+    marginBottom: "0.6rem",
   } as React.CSSProperties,
 };

@@ -1,29 +1,12 @@
-// components/wedding/RSVP.tsx
+// components/wedding/Kado.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { weddingConfig } from "@/lib/weddingData";
 
-type StatusKehadiran = "hadir" | "tidak" | "mungkin";
-
-interface FormData {
-  nama: string;
-  telepon: string;
-  jumlah: string;
-  status: StatusKehadiran;
-}
-
-export default function RSVP() {
+export default function Kado() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [form, setForm] = useState<FormData>({
-    nama: "",
-    telepon: "",
-    jumlah: "1 orang",
-    status: "hadir",
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,290 +21,430 @@ export default function RSVP() {
     return () => observer.disconnect();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setError("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.nama.trim() || !form.telepon.trim()) {
-      setError("Mohon lengkapi nama dan nomor telepon Anda.");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch(weddingConfig.sheetdbUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          data: { ...form, waktu: new Date().toLocaleString("id-ID") },
-        }),
-      });
-      if (!res.ok) throw new Error();
-      setSubmitted(true);
-    } catch {
-      setError("Terjadi kesalahan. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <section id="rsvp" ref={sectionRef} style={styles.section}>
-      <div style={styles.container}>
-        
-        {/* Header Section */}
-        <div className="animate" style={styles.header}>
-          <p style={styles.sectionLabel}>Join Our Celebration</p>
-          <h2 style={styles.sectionTitle}>Konfirmasi Kehadiran</h2>
-          <div style={styles.ornamentWrapper}>
-            <div style={styles.ornamentLine} />
-            <span style={{ color: "var(--gold)" }}>✦</span>
-            <div style={styles.ornamentLine} />
+    <section id="kado" ref={sectionRef} style={sectionStyle}>
+
+      {/* Background glow */}
+      <div style={bgGlow1Style} />
+      <div style={bgGlow2Style} />
+
+      <div style={containerStyle}>
+
+        {/* Header */}
+        <div className="animate" style={{ textAlign: "center", marginBottom: "5rem" }}>
+          <p style={labelStyle}>Wedding Gift</p>
+          <div style={ornRowStyle}>
+            <div style={ornLineStyle} />
+            <span style={ornDiamondStyle}>◆</span>
+            <div style={ornLineStyle} />
           </div>
-          <p style={styles.subtitle}>
-            Merupakan suatu kehormatan bagi kami jika Anda dapat hadir.<br />
-            Mohon konfirmasi sebelum <strong style={{ color: "var(--gold)" }}>14 Juni 2028</strong>
+          <h2 style={titleStyle}>Tanda Kasih</h2>
+          <p style={subtitleStyle}>
+            Doa tulus Anda adalah hadiah terindah bagi kami.
+            <br />
+            Namun jika ingin mengirimkan tanda kasih, dapat melalui:
           </p>
         </div>
 
-        {/* Form Container */}
-        <div className="animate" style={styles.glassCard}>
-          {submitted ? (
-            <SuccessMessage nama={form.nama} status={form.status} />
-          ) : (
-            <form onSubmit={handleSubmit} style={styles.form}>
-              
-              <FormGroup label="Nama Tamu">
-                <input
-                  name="nama"
-                  placeholder="Masukkan nama lengkap"
-                  value={form.nama}
-                  onChange={handleChange}
-                  style={styles.input}
-                />
-              </FormGroup>
-
-              <div style={styles.twoCol}>
-                <FormGroup label="Nomor WhatsApp">
-                  <input
-                    name="telepon"
-                    type="tel"
-                    placeholder="08xx xxxx xxxx"
-                    value={form.telepon}
-                    onChange={handleChange}
-                    style={styles.input}
-                  />
-                </FormGroup>
-
-                <FormGroup label="Jumlah Kehadiran">
-                  <select name="jumlah" value={form.jumlah} onChange={handleChange} style={styles.input}>
-                    {["1 orang", "2 orang", "3 orang", "4 orang"].map((opt) => (
-                      <option key={opt} value={opt} style={{color: '#000'}}>{opt}</option>
-                    ))}
-                  </select>
-                </FormGroup>
-              </div>
-
-              <FormGroup label="Pernyataan Kehadiran">
-                <div style={styles.radioGroup}>
-                  {[
-                    { val: "hadir", icon: "✨", label: "Hadir" },
-                    { val: "tidak", icon: "🙏", label: "Absen" },
-                    { val: "mungkin", icon: "⏳", label: "Mungkin" },
-                  ].map((opt) => (
-                    <label key={opt.val} style={form.status === opt.val ? styles.radioActive : styles.radioInactive}>
-                      <input
-                        type="radio"
-                        name="status"
-                        value={opt.val}
-                        checked={form.status === opt.val}
-                        onChange={handleChange}
-                        style={{ display: "none" }}
-                      />
-                      <span>{opt.icon} {opt.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </FormGroup>
-
-              {error && <p style={styles.error}>{error}</p>}
-
-              <button type="submit" disabled={loading} style={styles.submitBtn}>
-                {loading ? "Sabar ya..." : "Kirim Konfirmasi ✦"}
-              </button>
-            </form>
-          )}
+        {/* Kartu rekening */}
+        <div style={cardsGridStyle}>
+          {weddingConfig.rekening.map((item, i) => (
+            <RekeningCard key={i} item={item} index={i} />
+          ))}
         </div>
+
+        {/* Catatan */}
+        <div className="animate" style={noteWrapStyle}>
+          <div style={ornRowStyle}>
+            <div style={ornLineStyle} />
+            <span style={ornDiamondStyle}>◆</span>
+            <div style={ornLineStyle} />
+          </div>
+          <p style={noteStyle}>
+            Kehadiran dan doa restu Anda jauh lebih berarti dari hadiah apapun.
+            <br />
+            Terima kasih atas segala perhatian dan kasih sayang Anda. 🙏
+          </p>
+        </div>
+
       </div>
+
+      <style jsx>{`
+        .animate {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 1s ease, transform 1s ease;
+        }
+        .animate.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .kado-card {
+          transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .kado-card:hover {
+          transform: translateY(-8px);
+          border-color: rgba(184,150,74,0.5) !important;
+          box-shadow: 0 20px 40px rgba(184,150,74,0.1);
+        }
+        .copy-btn {
+          transition: all 0.3s ease;
+        }
+        .copy-btn:hover {
+          background: #B8964A !important;
+          color: #0d0503 !important;
+          border-color: #B8964A !important;
+        }
+        .toggle-btn {
+          transition: color 0.3s ease;
+        }
+        .toggle-btn:hover {
+          color: #B8964A !important;
+        }
+      `}</style>
     </section>
   );
 }
 
 // ─── Sub-komponen ──────────────────────────────────────────
 
-const FormGroup = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <div style={styles.formGroup}>
-    <label style={styles.label}>{label}</label>
-    {children}
-  </div>
-);
+interface RekeningItem {
+  bank: string;
+  atasNama: string;
+  nomor: string;
+  icon: string;
+  qris: string;
+}
 
-const SuccessMessage = ({ nama, status }: { nama: string; status: StatusKehadiran }) => (
-  <div style={styles.success}>
-    <div style={styles.successIcon}>✨</div>
-    <h3 style={styles.successTitle}>Terima Kasih, {nama}!</h3>
-    <p style={styles.successText}>
-      {status === "hadir" ? "Senang sekali! Sampai jumpa di hari bahagia kami." : "Doa Anda sudah cukup berarti bagi kami."}
-    </p>
-  </div>
-);
+function RekeningCard({ item, index }: { item: RekeningItem; index: number }) {
+  const [copied, setCopied] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
-// ─── STYLES (Clean & Elegant) ──────────────────────────────
+  function handleCopy() {
+    navigator.clipboard
+      .writeText(item.nomor.replace(/\s/g, ""))
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      })
+      .catch(() => {
+        const el = document.createElement("textarea");
+        el.value = item.nomor.replace(/\s/g, "");
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      });
+  }
 
-const styles = {
-  section: {
-    background: "#0d0503", // Senada dengan Hero & Galeri
-    padding: "8rem 1.5rem",
-    position: "relative",
-  } as React.CSSProperties,
+  return (
+    <div className="animate kado-card" style={cardStyle}>
 
-  container: {
-    maxWidth: "800px",
-    margin: "0 auto",
-  } as React.CSSProperties,
+      {/* Garis emas atas */}
+      <div style={cardTopLineStyle} />
 
-  header: {
-    textAlign: "center",
-    marginBottom: "4rem",
-  } as React.CSSProperties,
+      {/* Nomor kartu */}
+      <div style={cardIndexStyle}>0{index + 1}</div>
 
-  sectionLabel: {
-    fontSize: "0.8rem",
-    letterSpacing: "0.5em",
-    textTransform: "uppercase",
-    color: "var(--gold)",
-    marginBottom: "0.5rem",
-  } as React.CSSProperties,
+      {/* Header bank */}
+      <div style={cardHeaderStyle}>
+        <span style={bankIconStyle}>{item.icon}</span>
+        <div style={{ textAlign: "left" }}>
+          <p style={bankNameStyle}>{item.bank}</p>
+          <p style={holderNameStyle}>a.n. {item.atasNama}</p>
+        </div>
+      </div>
 
-  sectionTitle: {
-    fontFamily: "var(--font-serif)",
-    fontSize: "clamp(2.5rem, 5vw, 3.5rem)",
-    color: "#FAF0E0",
-    fontWeight: 300,
-  } as React.CSSProperties,
+      {/* Divider */}
+      <div style={dividerStyle} />
 
-  ornamentWrapper: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "15px",
-    margin: "1.5rem 0",
-  } as React.CSSProperties,
+      {/* Body — nomor / QR */}
+      <div style={cardBodyStyle}>
+        {showQR ? (
+          <div style={{ textAlign: "center" }}>
+            {/* Frame QR */}
+            <div style={qrFrameStyle}>
+              <div style={qrInnerStyle}>
+                <QRCodeSVG
+                  value={item.qris}
+                  size={130}
+                  fgColor="#1a0a05"
+                  bgColor="#FAF6F0"
+                  level="H"
+                />
+              </div>
+              {/* Sudut dekoratif QR */}
+              <div style={{ ...qrCornerStyle, top: 6, left: 6, borderWidth: "1px 0 0 1px" }} />
+              <div style={{ ...qrCornerStyle, top: 6, right: 6, borderWidth: "1px 1px 0 0" }} />
+              <div style={{ ...qrCornerStyle, bottom: 6, left: 6, borderWidth: "0 0 1px 1px" }} />
+              <div style={{ ...qrCornerStyle, bottom: 6, right: 6, borderWidth: "0 1px 1px 0" }} />
+            </div>
+            <p style={qrLabelStyle}>Scan QRIS untuk Transfer</p>
+          </div>
+        ) : (
+          <div style={{ width: "100%", textAlign: "center" }}>
+            {/* Nomor rekening */}
+            <p style={accountNumStyle}>{item.nomor}</p>
 
-  ornamentLine: {
-    width: "40px",
-    height: "1px",
-    background: "linear-gradient(90deg, transparent, var(--gold), transparent)",
-  } as React.CSSProperties,
+            {/* Tombol salin */}
+            <button
+              onClick={handleCopy}
+              className="copy-btn"
+              style={{
+                ...copyBtnStyle,
+                background: copied ? "#B8964A" : "transparent",
+                color: copied ? "#0d0503" : "#B8964A",
+                borderColor: copied ? "#B8964A" : "rgba(184,150,74,0.4)",
+              }}
+            >
+              {copied ? "✓ Tersalin!" : "📋 Salin Nomor"}
+            </button>
+          </div>
+        )}
+      </div>
 
-  subtitle: {
-    color: "rgba(250, 240, 224, 0.7)",
-    fontSize: "0.95rem",
-    lineHeight: 1.8,
-    marginTop: "1rem",
-  } as React.CSSProperties,
+      {/* Toggle */}
+      <button
+        onClick={() => setShowQR(!showQR)}
+        className="toggle-btn"
+        style={toggleBtnStyle}
+      >
+        {showQR ? "← Lihat Nomor Rekening" : "Lihat QR Code →"}
+      </button>
 
-  glassCard: {
-    background: "rgba(255, 255, 255, 0.03)",
-    backdropFilter: "blur(10px)",
-    border: "1px solid rgba(184, 150, 74, 0.2)",
-    borderRadius: "24px",
-    padding: "3rem",
-    boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
-  } as React.CSSProperties,
+    </div>
+  );
+}
 
-  form: { display: "flex", flexDirection: "column", gap: "2rem" } as React.CSSProperties,
+// ─── Styles ───────────────────────────────────────────────
 
-  formGroup: { display: "flex", flexDirection: "column", gap: "0.8rem" } as React.CSSProperties,
+const sectionStyle: React.CSSProperties = {
+  background: "#0d0503",
+  padding: "8rem 1.5rem",
+  position: "relative",
+  overflow: "hidden",
+};
 
-  label: {
-    fontSize: "0.75rem",
-    letterSpacing: "0.2em",
-    textTransform: "uppercase",
-    color: "var(--gold-light)",
-    fontWeight: "bold",
-  } as React.CSSProperties,
+const bgGlow1Style: React.CSSProperties = {
+  position: "absolute",
+  top: "-100px",
+  left: "50%",
+  transform: "translateX(-50%)",
+  width: "800px",
+  height: "400px",
+  background: "radial-gradient(ellipse, rgba(184,150,74,0.07), transparent 70%)",
+  filter: "blur(60px)",
+  pointerEvents: "none",
+};
 
-  input: {
-    background: "rgba(255, 255, 255, 0.05)",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: "12px",
-    padding: "1rem 1.2rem",
-    color: "#FAF0E0",
-    fontSize: "1rem",
-    outline: "none",
-    transition: "border 0.3s",
-  } as React.CSSProperties,
+const bgGlow2Style: React.CSSProperties = {
+  position: "absolute",
+  bottom: "-100px",
+  left: "50%",
+  transform: "translateX(-50%)",
+  width: "600px",
+  height: "300px",
+  background: "radial-gradient(ellipse, rgba(123,140,110,0.05), transparent 70%)",
+  filter: "blur(40px)",
+  pointerEvents: "none",
+};
 
-  twoCol: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "1.5rem",
-  } as React.CSSProperties,
+const containerStyle: React.CSSProperties = {
+  maxWidth: "900px",
+  margin: "0 auto",
+  position: "relative",
+};
 
-  radioGroup: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "10px",
-  } as React.CSSProperties,
+const labelStyle: React.CSSProperties = {
+  fontSize: "0.72rem",
+  letterSpacing: "0.4em",
+  textTransform: "uppercase",
+  color: "#B8964A",
+  marginBottom: "1rem",
+};
 
-  radioActive: {
-    padding: "1rem",
-    background: "var(--gold)",
-    color: "#000",
-    borderRadius: "12px",
-    textAlign: "center",
-    cursor: "pointer",
-    fontSize: "0.85rem",
-    fontWeight: "bold",
-    transition: "0.3s",
-  } as React.CSSProperties,
+const ornRowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "0.75rem",
+  width: "120px",
+  margin: "1rem auto",
+};
 
-  radioInactive: {
-    padding: "1rem",
-    background: "rgba(255, 255, 255, 0.05)",
-    color: "#FAF0E0",
-    borderRadius: "12px",
-    textAlign: "center",
-    cursor: "pointer",
-    fontSize: "0.85rem",
-    transition: "0.3s",
-    border: "1px solid transparent",
-  } as React.CSSProperties,
+const ornLineStyle: React.CSSProperties = {
+  flex: 1,
+  height: "1px",
+  background: "linear-gradient(90deg, transparent, #B8964A)",
+};
 
-  submitBtn: {
-    marginTop: "1rem",
-    padding: "1.2rem",
-    background: "linear-gradient(45deg, #B8964A, #E5C780)",
-    color: "#000",
-    border: "none",
-    borderRadius: "12px",
-    fontSize: "0.9rem",
-    fontWeight: "bold",
-    letterSpacing: "0.2em",
-    textTransform: "uppercase",
-    cursor: "pointer",
-    boxShadow: "0 10px 20px rgba(184, 150, 74, 0.2)",
-    transition: "transform 0.2s",
-  } as React.CSSProperties,
+const ornDiamondStyle: React.CSSProperties = {
+  color: "#B8964A",
+  fontSize: "0.45rem",
+};
 
-  error: { color: "#ff6b6b", fontSize: "0.85rem", textAlign: "center" } as React.CSSProperties,
+const titleStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)",
+  fontSize: "clamp(2.5rem, 5vw, 3.5rem)",
+  fontWeight: 300,
+  color: "#FAF0E0",
+  letterSpacing: "0.05em",
+};
 
-  success: { textAlign: "center", padding: "2rem 0" } as React.CSSProperties,
-  successIcon: { fontSize: "4rem", marginBottom: "1rem" } as React.CSSProperties,
-  successTitle: { color: "#FAF0E0", fontFamily: "var(--font-serif)", fontSize: "2rem" } as React.CSSProperties,
-  successText: { color: "var(--gold-light)", marginTop: "1rem", opacity: 0.8 } as React.CSSProperties,
+const subtitleStyle: React.CSSProperties = {
+  fontSize: "0.88rem",
+  color: "rgba(250,240,224,0.5)",
+  lineHeight: 1.9,
+  marginTop: "1rem",
+  fontStyle: "italic",
+  fontFamily: "var(--font-serif)",
+};
+
+const cardsGridStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+  gap: "2rem",
+};
+
+const cardStyle: React.CSSProperties = {
+  background: "rgba(255,255,255,0.02)",
+  border: "1px solid rgba(184,150,74,0.15)",
+  padding: "2.5rem",
+  textAlign: "center",
+  position: "relative",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+const cardTopLineStyle: React.CSSProperties = {
+  position: "absolute",
+  top: 0,
+  left: "20%",
+  right: "20%",
+  height: "1px",
+  background: "linear-gradient(90deg, transparent, #B8964A, transparent)",
+};
+
+const cardIndexStyle: React.CSSProperties = {
+  position: "absolute",
+  top: "1.2rem",
+  right: "1.5rem",
+  fontSize: "0.65rem",
+  letterSpacing: "0.15em",
+  color: "rgba(184,150,74,0.3)",
+  fontFamily: "var(--font-serif)",
+};
+
+const cardHeaderStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: "1rem",
+  width: "100%",
+  marginBottom: "1.5rem",
+};
+
+const bankIconStyle: React.CSSProperties = {
+  fontSize: "2.2rem",
+};
+
+const bankNameStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)",
+  fontSize: "1.2rem",
+  fontWeight: 400,
+  color: "#FAF0E0",
+};
+
+const holderNameStyle: React.CSSProperties = {
+  fontSize: "0.72rem",
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  color: "rgba(184,150,74,0.6)",
+  marginTop: "0.2rem",
+};
+
+const dividerStyle: React.CSSProperties = {
+  width: "100%",
+  height: "1px",
+  background: "linear-gradient(90deg, transparent, rgba(184,150,74,0.15), transparent)",
+  marginBottom: "2rem",
+};
+
+const cardBodyStyle: React.CSSProperties = {
+  minHeight: "180px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+};
+
+const accountNumStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)",
+  fontSize: "2rem",
+  color: "#B8964A",
+  letterSpacing: "0.1em",
+  marginBottom: "1.5rem",
+};
+
+const copyBtnStyle: React.CSSProperties = {
+  padding: "0.7rem 1.8rem",
+  border: "1px solid rgba(184,150,74,0.4)",
+  fontSize: "0.78rem",
+  letterSpacing: "0.12em",
+  cursor: "pointer",
+  fontFamily: "var(--font-sans)",
+};
+
+const qrFrameStyle: React.CSSProperties = {
+  position: "relative",
+  display: "inline-block",
+  padding: "16px",
+  background: "#FAF6F0",
+  marginBottom: "1rem",
+};
+
+const qrInnerStyle: React.CSSProperties = {
+  display: "block",
+};
+
+const qrCornerStyle: React.CSSProperties = {
+  position: "absolute",
+  width: "16px",
+  height: "16px",
+  borderStyle: "solid",
+  borderColor: "#B8964A",
+};
+
+const qrLabelStyle: React.CSSProperties = {
+  fontSize: "0.75rem",
+  letterSpacing: "0.1em",
+  color: "rgba(250,240,224,0.4)",
+  textTransform: "uppercase",
+};
+
+const toggleBtnStyle: React.CSSProperties = {
+  marginTop: "1.5rem",
+  background: "none",
+  border: "none",
+  color: "rgba(250,240,224,0.25)",
+  fontSize: "0.75rem",
+  letterSpacing: "0.1em",
+  cursor: "pointer",
+  fontFamily: "var(--font-sans)",
+};
+
+const noteWrapStyle: React.CSSProperties = {
+  textAlign: "center",
+  marginTop: "5rem",
+};
+
+const noteStyle: React.CSSProperties = {
+  fontSize: "0.88rem",
+  color: "rgba(250,240,224,0.4)",
+  fontStyle: "italic",
+  lineHeight: 1.9,
+  fontFamily: "var(--font-serif)",
+  marginTop: "1rem",
 };
