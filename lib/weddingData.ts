@@ -88,7 +88,7 @@ export const weddingConfig = {
 
   // ─── MUSIK ──────────────────────────────────────────────
   // Taruh file mp3 di /public/music/ atau pakai URL eksternal
-  musicUrl: "/music/musicWed.mp3",
+  musicUrl: "/music/musicWedding.mp3",
 
   // ─── ADD TO CALENDAR ─────────────────────────────────────
   googleCalendarUrl:

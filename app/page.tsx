@@ -1,38 +1,37 @@
 // app/page.tsx
-"use client";
+import { Metadata } from "next";
+import WeddingContainer from "@/components/wedding/WeddingContainer";
 
-import { useState } from "react";
-import Cover  from "@/components/wedding/Cover";
-import Navbar from "@/components/wedding/Navbar";
-import Hero   from "@/components/wedding/Hero";
-import Profil from "@/components/wedding/Profil";
-import Acara  from "@/components/wedding/Acara";
-import Galeri from "@/components/wedding/Galeri";
-import RSVP   from "@/components/wedding/RSVP";
-import Ucapan from "@/components/wedding/Ucapan";
-import Kado   from "@/components/wedding/Kado";
-import Footer from "@/components/wedding/Footer";
+export const metadata: Metadata = {
+  title: "Undangan Pernikahan - Radit & Keiani",
+  description: "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami.",
+  openGraph: {
+    title: "Undangan Pernikahan Radit & Keiani",
+    description: "Save the Date: 28 Juni 2026", 
+    // Pastikan URL di bawah ini sesuai dengan domain produksi kamu nanti
+    url: "https://wedding-invitation-radityaputra.vercel.app/",
+    siteName: "Pernikahan Radit & Keiani",
+    images: [
+      {
+        // Perhatikan penambahan /images/ di sini
+        url: "https://wedding-invitation-radityaputra.vercel.app/images/cover.png",
+        width: 1200,
+        height: 630,
+        alt: "Undangan Pernikahan Radit & Keiani",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Undangan Pernikahan Radit & Keiani",
+    description: "Kami menantikan kehadiran Anda di hari bahagia kami.",
+    // Samakan juga untuk twitter card
+    images: ["https://wedding-invitation-radityaputra.vercel.app/images/cover.png"],
+  },
+};
 
-export default function WeddingPage() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <main>
-      {!isOpen && <Cover onOpen={() => setIsOpen(true)} />}
-
-      {isOpen && (
-        <>
-          <Navbar />
-          <Hero />
-          <Profil />
-          <Acara />
-          <Galeri />
-          <RSVP />
-          <Ucapan />
-          <Kado />
-          <Footer />
-        </>
-      )}
-    </main>
-  );
+export default function Page() {
+  return <WeddingContainer />;
 }
