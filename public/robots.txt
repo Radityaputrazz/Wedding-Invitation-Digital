@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
+
+Sitemap: https://wedding-invitation-radityaputra.vercel.app/sitemap.xml
