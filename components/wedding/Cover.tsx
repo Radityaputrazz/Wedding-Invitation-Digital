@@ -5,17 +5,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { weddingConfig } from "@/lib/weddingData";
 import { Variants } from "framer-motion";
 
-export default function Cover({ onOpen, guestName }: any) {
+export default function Cover({ onOpen, guestName }: { onOpen: () => void, guestName: string }) {
   const [open, setOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Formatting nama tamu: Huruf kapital di setiap kata
   const formattedGuest =
     guestName?.replace(/\b\w/g, (c: string) => c.toUpperCase()) ||
     "Tamu Undangan";
 
   function handleOpen() {
     setOpen(true);
+    // Audio dimainkan saat tombol diklik (solusi auto-play browser)
     audioRef.current?.play().catch(() => {});
+    // Delay onOpen sedikit agar animasi exit AnimatePresence selesai
     setTimeout(onOpen, 1200);
   }
 
@@ -34,13 +37,14 @@ export default function Cover({ onOpen, guestName }: any) {
             transition={{ duration: 1.2 }}
             style={overlay}
           >
-            {/* 🎥 Background cinematic */}
+            {/* 🎥 Background cinematic dengan efek Ken Burns */}
             <motion.div
               initial={{ scale: 1.2 }}
               animate={{ scale: 1.3, x: [0, 20, 0], y: [0, -10, 0] }}
               transition={{
                 duration: 30,
                 repeat: Infinity,
+                repeatType: "reverse",
                 ease: "easeInOut",
               }}
               style={{
@@ -62,6 +66,8 @@ export default function Cover({ onOpen, guestName }: any) {
               transition={{
                 duration: 3,
                 delay: 1,
+                repeat: Infinity,
+                repeatDelay: 5,
                 ease: "easeInOut",
               }}
               style={lightSweep}
@@ -72,56 +78,60 @@ export default function Cover({ onOpen, guestName }: any) {
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.2, duration: 1 }}
+                transition={{ delay: 0.5, duration: 1 }}
                 style={bismillah}
               >
                 بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيمِ
               </motion.p>
 
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.8, duration: 1 }}
+                transition={{ delay: 0.8, duration: 1 }}
                 style={label}
               >
-                The Wedding Of
+                THE WEDDING OF
               </motion.p>
 
               {/* HERO NAME */}
-              <motion.div variants={item}>
-                <h2 style={signatureStyle}>
+              <motion.div 
+                initial="hidden"
+                animate="show"
+                variants={staggerContainer}
+              >
+                <motion.h2 variants={item} style={signatureStyle}>
                   {weddingConfig.pria.namaPanggilan}
-                </h2>
+                </motion.h2>
 
-                <div style={ampersandStyle}>&</div>
+                <motion.div variants={item} style={ampersandStyle}>&</motion.div>
 
-                <h2 style={signatureStyle}>
+                <motion.h2 variants={item} style={signatureStyle}>
                   {weddingConfig.wanita.namaPanggilan}
-                </h2>
+                </motion.h2>
               </motion.div>
 
-              {/* GUEST */}
+              {/* GUEST SECTION */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 3 }}
-                style={guest}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 2, duration: 1 }}
+                style={guestWrapper}
               >
-                <p>Dear,</p>
-                <h2>{formattedGuest}</h2>
+                <p style={dearText}>Dear,</p>
+                <h2 style={guestNameStyle}>{formattedGuest}</h2>
               </motion.div>
 
               {/* BUTTON */}
               <motion.button
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 3.5 }}
-                whileHover={{ scale: 1.05 }}
+                transition={{ delay: 2.5 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(184, 150, 74, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleOpen}
                 style={button}
               >
-                Buka Undangan
+                BUKA UNDANGAN
               </motion.button>
             </div>
           </motion.div>
@@ -131,24 +141,27 @@ export default function Cover({ onOpen, guestName }: any) {
   );
 }
 
-// ─── STYLES ─────────────────
+// ─── ANIMATION VARIANTS ─────────────────
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.3, delayChildren: 1.2 }
+  }
+};
 
 const item: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 60,
-    filter: "blur(10px)",
-  },
+  hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
   show: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: {
-      duration: 1.2,
-      ease: [0.16, 1, 0.3, 1],
-    },
+    transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
   },
 };
+
+// ─── STYLES ─────────────────
 
 const overlay: React.CSSProperties = {
   position: "fixed",
@@ -156,128 +169,108 @@ const overlay: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  padding: "1rem", // 🔥 biar aman di layar kecil
+  zIndex: 9999,
+  backgroundColor: "#0d0503",
+  overflow: "hidden"
 };
 
 const bg: React.CSSProperties = {
   position: "absolute",
   inset: 0,
   backgroundSize: "cover",
-  backgroundPosition: "50% 25%",
+  backgroundPosition: "center 25%",
 };
 
 const vignette: React.CSSProperties = {
   position: "absolute",
   inset: 0,
-  background:
-    "radial-gradient(circle, transparent 50%, rgba(0,0,0,0.8))",
+  background: "radial-gradient(circle, transparent 20%, rgba(0,0,0,0.7) 100%)",
 };
 
 const lightSweep: React.CSSProperties = {
   position: "absolute",
   top: 0,
   bottom: 0,
-  width: "100%",
-  background:
-    "linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent)",
-  transform: "skewX(-20deg)",
+  width: "50%",
+  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)",
+  transform: "skewX(-25deg)",
 };
-const logoWrap: React.CSSProperties = {
-  marginTop: "1.5rem",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: "0.6rem",
-  filter: "drop-shadow(0 0 10px rgba(212,176,106,0.15))",
-};
-
-/* ✨ Nama atas (lebih ringan, sedikit tracking) */
-const logoNameTop: React.CSSProperties = {
-  fontFamily: "var(--font-serif)",
-  fontSize: "clamp(2.2rem, 7vw, 5.2rem)", // 🔥 lebih aman di mobile
-  fontWeight: 400,
-  letterSpacing: "clamp(0.08em, 0.5vw, 0.14em)", // 🔥 fleksibel
-  lineHeight: 1.1,
-  textTransform: "uppercase",
-  textAlign: "center",
-  background: "linear-gradient(180deg, #F6E7C1, #D4B06A, #9F7A34)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  textShadow: "0 6px 20px rgba(0,0,0,0.6)",
-};
-
-const logoNameBottom: React.CSSProperties = {
-  ...logoNameTop,
-  fontWeight: 500,
-};
-
-const signatureStyle: React.CSSProperties = {
-  fontFamily: "var(--font-signature)",
-  fontSize: "clamp(3.5rem, 10vw, 5.5rem)",
-  lineHeight: 1,
-  color: "#E6C27A",
-
-  letterSpacing: "0.05em",
-  textAlign: "center",
-
-  background: "linear-gradient(180deg, #F5D08A, #B8964A)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-
-  textShadow: `
-    0 4px 20px rgba(0,0,0,0.5),
-    0 0 25px rgba(212,176,106,0.25)
-  `,
-} satisfies React.CSSProperties;
-
-const ampersandStyle: React.CSSProperties = {
-  fontFamily: "serif",
-  fontSize: "2rem",
-  color: "#B8964A",
-  margin: "0.5rem 0",
-  opacity: 0.8,
-} satisfies React.CSSProperties;
 
 const content: React.CSSProperties = {
   position: "relative",
-  zIndex: 2,
-  textAlign: "center",
+  zIndex: 10,
+  textAlign: "center" as const,
   color: "#FAF0E0",
-  padding: "clamp(1.5rem, 5vw, 3rem)", // 🔥 penting banget
-  maxWidth: "720px",
+  padding: "2rem",
   width: "100%",
+  maxWidth: "600px",
 };
 
-const name: React.CSSProperties = {
-  fontSize: "clamp(3.5rem, 10vw, 6rem)",
-  fontFamily: "var(--font-serif)",
-  letterSpacing: "0.08em",
-  textShadow: "0 10px 40px rgba(0,0,0,0.7)",
+const signatureStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)", // Menggunakan serif sesuai Night Gala
+  fontSize: "clamp(3rem, 10vw, 5rem)",
+  lineHeight: 1.2,
+  color: "#FAF0E0",
+  textAlign: "center" as const,
+  letterSpacing: "0.02em",
+  textShadow: "0 10px 30px rgba(0,0,0,0.5)",
 };
 
-const label = {
-  fontSize: "0.7rem",
-  letterSpacing: "0.6em",
+const ampersandStyle: React.CSSProperties = {
+  fontFamily: "serif",
+  fontSize: "1.8rem",
+  color: "#B8964A",
+  margin: "0.5rem 0",
+  fontStyle: "italic"
+};
+
+const bismillah: React.CSSProperties = {
+  marginBottom: "1.5rem",
+  fontSize: "1.2rem",
   opacity: 0.8,
+  letterSpacing: "0.1em"
 };
 
-const bismillah = {
-  marginBottom: "1rem",
+const label: React.CSSProperties = {
+  fontSize: "0.7rem",
+  letterSpacing: "0.5em",
+  color: "#B8964A",
+  marginBottom: "1rem"
 };
 
-const guest = {
-  marginTop: "2rem",
+const guestWrapper: React.CSSProperties = {
+  marginTop: "3rem",
+  padding: "1.5rem",
+  borderRadius: "20px",
+  background: "rgba(255,255,255,0.03)",
+  backdropFilter: "blur(5px)",
+  border: "1px solid rgba(184, 150, 74, 0.15)"
+};
+
+const dearText: React.CSSProperties = {
+  fontSize: "0.8rem",
+  letterSpacing: "0.2em",
+  opacity: 0.7,
+  marginBottom: "0.5rem"
+};
+
+const guestNameStyle: React.CSSProperties = {
+  fontFamily: "var(--font-serif)",
+  fontSize: "1.6rem",
+  color: "#FAF0E0",
+  fontWeight: 400
 };
 
 const button: React.CSSProperties = {
-  marginTop: "2.5rem",
-  padding: "clamp(0.9rem, 3vw, 1.2rem) clamp(2rem, 6vw, 3.5rem)",
-  fontSize: "clamp(0.7rem, 2.5vw, 0.9rem)",
-  background: "rgba(212,176,106,0.95)",
-  color: "#1a0a05",
+  marginTop: "3rem",
+  padding: "1rem 2.5rem",
+  fontSize: "0.75rem",
+  background: "linear-gradient(135deg, #B8964A, #8F7235)",
+  color: "#0d0503",
   border: "none",
-  borderRadius: "999px",
-  letterSpacing: "0.2em",
+  borderRadius: "50px",
+  letterSpacing: "0.3em",
   cursor: "pointer",
+  fontWeight: 700,
+  boxShadow: "0 10px 20px rgba(0,0,0,0.3)"
 };
-
