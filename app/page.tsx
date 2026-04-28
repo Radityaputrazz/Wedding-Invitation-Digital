@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     images: [
       {
         // Perhatikan penambahan /images/ di sini
-        url: "https://wedding-invitation-radityaputra.vercel.app/images/coverWa.png",
+        url: "https://wedding-invitation-radityaputra.vercel.app/images/undangan.png",
         width: 1200,
         height: 630,
         alt: "Undangan Pernikahan Radit & Keiani",
