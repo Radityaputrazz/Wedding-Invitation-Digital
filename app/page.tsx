@@ -1,9 +1,12 @@
-import { useSearchParams } from "next/navigation";
+import { Metadata } from "next";
 import WeddingContainer from "@/components/wedding/WeddingContainer";
 
-export default function Page() {
-  const params = useSearchParams();
-  const name = params.get("to") ?? "Tamu Undangan";
+export const metadata: Metadata = {
+  title: "Undangan Pernikahan - Radit & Keiani",
+  description:
+    "Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.",
+};
 
-  return <WeddingContainer guestName={name} />;
+export default function Page() {
+  return <WeddingContainer guestName="Tamu Undangan" />;
 }
