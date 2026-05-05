@@ -238,10 +238,10 @@ const labelStyle: React.CSSProperties = {
 
 const ornRowStyle: React.CSSProperties = {
   display: "flex",
-  alignContent: "center", 
+  alignItems: "center", // ← was alignContent
   justifyContent: "center",
-  gap: "0.75rem", 
-  width: "120px", 
+  gap: "0.75rem",
+  width: "120px",
   margin: "1rem auto",
 };
 
@@ -282,12 +282,11 @@ const cardStyle: React.CSSProperties = {
   background: "rgba(255,255,255,0.02)",
   backdropFilter: "blur(10px)",
   border: "1px solid rgba(184,150,74,0.12)",
-  borderRadius: "24px",
   padding: "3rem 2rem",
   textAlign: "center",
   position: "relative",
-  display: "flex", 
-  flexDirection: "column", 
+  display: "flex",
+  flexDirection: "column",
   alignItems: "center",
 };
 
@@ -355,22 +354,20 @@ const accountNumStyle: React.CSSProperties = {
 };
 
 const copyBtnStyle: React.CSSProperties = {
-  padding: "0.8rem 2rem", 
+  padding: "0.8rem 2rem",
   border: "1px solid rgba(184,150,74,0.3)",
-  fontSize: "0.75rem", 
-  letterSpacing: "0.15em", 
+  fontSize: "0.75rem",
+  letterSpacing: "0.15em",
   cursor: "pointer",
-  borderRadius: "50px", 
   transition: "0.3s ease",
 };
 
 const qrFrameStyle: React.CSSProperties = {
-  position: "relative", 
-  display: "inline-block", 
+  position: "relative",
+  display: "inline-block",
   padding: "12px",
-  background: "#FAF6F0", 
+  background: "#FAF6F0",
   marginBottom: "1rem",
-  borderRadius: "8px",
 };
 
 const qrInnerStyle: React.CSSProperties = { display: "block" };
@@ -400,12 +397,16 @@ const toggleBtnStyle: React.CSSProperties = {
   opacity: 0.7,
 };
 
-const noteWrapStyle: React.CSSProperties = { textAlign: "center", marginTop: "5rem" };
+const noteWrapStyle: React.CSSProperties = { 
+  textAlign: "center", 
+  marginTop: "5rem" 
+};
 
 const noteStyle: React.CSSProperties = {
   fontSize: "0.85rem", 
   color: "rgba(250,240,224,0.4)",
   fontStyle: "italic", 
-  lineHeight: 1.8, fontFamily: "var(--font-serif)", 
+  lineHeight: 1.8, 
+  fontFamily: "var(--font-serif)", 
   marginTop: "1rem",
 };

@@ -7,7 +7,7 @@ export const weddingConfig = {
     namaPanggilan: "Radit",
     namaAyah: "Agus Budi Dharmawan",
     namaIbu: "Niluh Herlina Arya Ningsih",
-    instagram: "@rdtyaptraa",
+    instagram: "rdtyaptraa",
     instagramUrl: "https://instagram.com/rdtyaptraa",
     foto: "/images/radit.jpeg",   // taruh di /public/images/
   },
@@ -17,7 +17,7 @@ export const weddingConfig = {
     namaPanggilan: "Keiani",
     namaAyah: "Dustin Mabe",
     namaIbu: "Alexandra Christabel Claire",
-    instagram: "@keiani",
+    instagram: "keiani",
     instagramUrl: "https://instagram.com/keiani",
     foto: "/images/keiani.jpg",
   },
@@ -27,7 +27,7 @@ export const weddingConfig = {
     tanggal: "Sabtu, 28 Juni 2028",
     waktu: "08.00 – 10.00 WIB",
     namaGedung: "Masjid Al-Muhajirin",
-    alamat: "Jl. Flamboyan No. 27, Pesanggrahan, Jakarta Selatan",
+    alamat: "Jl. Flamboyan No. 27, Rt 13/06 Pesanggrahan, Jakarta Selatan",
     mapsUrl: "https://maps.app.goo.gl/gBDeWoXcJZkCPgkWA",
   },
 
@@ -41,7 +41,7 @@ export const weddingConfig = {
 
   // ─── TANGGAL (untuk countdown) ──────────────────────────
   // Format: YYYY-MM-DDTHH:mm:ss (waktu lokal)
-  weddingDate: "2028-06-28T08:00:00",
+  weddingDate: "2028-06-28T08:00:00+07:00", // Waktu Jakarta,
 
   // ─── KADO DIGITAL ───────────────────────────────────────
   rekening: [
@@ -74,7 +74,7 @@ export const weddingConfig = {
   keluargaWanita: "Keluarga Besar Dustin Mabe",
 
   // ─── Foto Pre-Wedding ──────────────────────────────────────────────
-  fotoCover: "/images/prewed.png", // taruh di /public/images/
+  fotoCover: "/images/cover.png", // taruh di /public/images/
 
     // ─── GALERI ─────────────────────────────────────────────
   galeri: [
@@ -91,6 +91,6 @@ export const weddingConfig = {
   musicUrl: "/music/musicWedding.mp3",
 
   // ─── ADD TO CALENDAR ─────────────────────────────────────
-  googleCalendarUrl:
-    `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Radit+%26+Keiani&dates=20250628T010000Z/20250628T080000Z&details=Akad+Nikah+dan+Resepsi&location=Jakarta`,
+  // Gunakan encodeURIComponent untuk keamanan string di URL
+googleCalendarUrl: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Pernikahan Radit & Keiani")}&dates=20280628T010000Z/20280628T080000Z&details=Akad+Nikah+dan+Resepsi&location=Jakarta`,
 };
