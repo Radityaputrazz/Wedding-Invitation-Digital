@@ -1,19 +1,31 @@
-// app/page.tsx
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import WeddingContainer from "@/components/wedding/shared/WeddingContainer";
+import { sanitizeInput } from "@/src/utils/sanitize";
 
 export const metadata: Metadata = {
   title: "Undangan Pernikahan - Radit & Keiani",
-  description: "Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.",
+  description:
+    "Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: Promise<{ to?: string }>;
-}) {
+interface PageProps {
+  searchParams?: Promise<{
+    to?: string;
+  }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
-  const guestName = params?.to ? decodeURIComponent(params.to) : "Tamu Undangan";
+
+  let decodedName = "Tamu Undangan";
+
+  try {
+    decodedName = decodeURIComponent(params?.to || "Tamu Undangan");
+  } catch {
+    decodedName = "Tamu Undangan";
+  }
+
+  const guestName = sanitizeInput(decodedName, 80);
 
   return <WeddingContainer guestName={guestName} />;
 }

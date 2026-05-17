@@ -50,7 +50,7 @@ export const weddingConfig = {
       atasNama: "Raditya Ananda Putra",
       nomor: "5010 621 056",
       icon: "🏦",
-      qris: "5010621056"
+      qris: "00020101021240530013ID.CO.BCA.WWW0118936000141501062105021050106210565204482953033605802ID5920RADITYA ANANDA PUTRA6013Jakarta Pusat61051031062470804DMCT99350002000125501062105600177905366741463040D63"
     },
     {
       bank: "Bank Mandiri",
@@ -61,10 +61,6 @@ export const weddingConfig = {
     },
   ],
 
-  // ─── RSVP & Ucapan ──────────────────────────────────────────────
-  // lib/weddingData.ts — tambahkan field ini
-  sheetdbUrl: "https://sheetdb.io/api/v1/saa3bvq41m0vz", // ganti dengan URL Anda
-
   // ─── PROTOKOL ───────────────────────────────────────────
   dressCode: "Batik atau Formal – Warna Sage Green & Cream",
   hashtag: "#WeddingRaditKeiani",
@@ -72,6 +68,10 @@ export const weddingConfig = {
   // ─── KELUARGA PENGUNDANG ─────────────────────────────────
   keluargaPria: "Keluarga Besar Agus Budi Dharmawan",
   keluargaWanita: "Keluarga Besar Dustin Mabe",
+
+  // ─── RSVP & Ucapan ──────────────────────────────────────────────
+  // lib/weddingData.ts — tambahkan field ini
+  sheetdbUrl: "https://sheetdb.io/api/v1/saa3bvq41m0vz",
 
   // ─── Foto Pre-Wedding ──────────────────────────────────────────────
   fotoCover: "/images/cover.png", // taruh di /public/images/

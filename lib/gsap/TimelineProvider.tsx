@@ -1,33 +1,63 @@
 "use client";
 
-import { createContext, useContext, useRef, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useRef,
+} from "react";
+
 import gsap from "gsap";
 
-type TLContextType = {
-  master: gsap.core.Timeline | null;
-};
+interface TimelineContextType {
+  master: gsap.core.Timeline;
+}
 
-const TLContext = createContext<TLContextType>({ master: null });
+const TLContext =
+  createContext<
+    TimelineContextType | null
+  >(null);
 
-export function TimelineProvider({ children }: { children: React.ReactNode }) {
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
+export function TimelineProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
 
-  useEffect(() => {
-    tlRef.current = gsap.timeline({
-      defaults: {
-        ease: "power3.out",
-        duration: 1.2,
-      },
-    });
-  }, []);
+  const tlRef =
+    useRef(
+      gsap.timeline({
+        paused: true,
+      })
+    );
+
+  const value =
+    useMemo(
+      () => ({
+        master: tlRef.current,
+      }),
+      []
+    );
 
   return (
-    <TLContext.Provider value={{ master: tlRef.current }}>
+    <TLContext.Provider
+      value={value}
+    >
       {children}
     </TLContext.Provider>
   );
 }
 
-export function useMasterTimeline() {
-  return useContext(TLContext);
+export function useTimeline() {
+
+  const context =
+    useContext(TLContext);
+
+  if (!context) {
+    throw new Error(
+      "useTimeline must be used within TimelineProvider"
+    );
+  }
+
+  return context;
 }

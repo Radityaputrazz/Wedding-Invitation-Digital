@@ -1,12 +1,16 @@
-// next.config.ts atau next.config.js
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
 
-const nextConfig: NextConfig = {
   images: {
-    // Tambahkan baris ini untuk mengizinkan quality 100
-    qualities: [75, 100],
-    // Jika Anda menggunakan remote images nanti, tambahkan juga remotePatterns di sini
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
